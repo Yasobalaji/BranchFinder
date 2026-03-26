@@ -1,0 +1,12184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sri Lanka Bank Branch Finder</title>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --primary: #1a3a6b;
+  --primary-mid: #1e4080;
+  --primary-light: #2656a8;
+  --accent: #b8963e;
+  --accent-light: #d4ad57;
+  --accent-pale: #f5ead2;
+  --bg: #f4f6fb;
+  --bg2: #eef1f8;
+  --white: #ffffff;
+  --surface: #ffffff;
+  --border: #d4dae8;
+  --border-accent: #c9a84c44;
+  --text: #1a2640;
+  --text-mid: #3a4f6b;
+  --text-muted: #6b7fa3;
+  --text-light: #9aaac4;
+  --green: #1a7a4a;
+  --green-bg: #e8f5ee;
+  --blue: #1a5ea8;
+  --blue-bg: #e8f0fa;
+  --orange: #c45c1a;
+  --orange-bg: #fdf0e6;
+  --shadow-sm: 0 1px 4px rgba(20,40,80,0.08);
+  --shadow: 0 4px 20px rgba(20,40,80,0.10);
+  --shadow-lg: 0 8px 40px rgba(20,40,80,0.13);
+  --radius: 12px;
+  --radius-sm: 8px;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;}
+body::before{content:'';position:fixed;inset:0;background:linear-gradient(135deg,rgba(26,58,107,0.04) 0%,transparent 60%),repeating-linear-gradient(0deg,transparent,transparent 60px,rgba(26,58,107,0.015) 60px,rgba(26,58,107,0.015) 61px),repeating-linear-gradient(90deg,transparent,transparent 60px,rgba(26,58,107,0.015) 60px,rgba(26,58,107,0.015) 61px);pointer-events:none;z-index:0;}
+
+/* ── TOPBAR ── */
+.topbar{position:sticky;top:0;z-index:100;background:var(--primary);box-shadow:var(--shadow-lg);}
+.topbar-inner{max-width:1400px;margin:0 auto;padding:0 32px;height:60px;display:flex;align-items:center;justify-content:space-between;gap:16px;}
+.brand{display:flex;align-items:center;gap:12px;}
+.brand-icon{width:38px;height:38px;background:linear-gradient(135deg,var(--accent),var(--accent-light));border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;box-shadow:0 2px 10px rgba(184,150,62,0.35);flex-shrink:0;}
+.brand-text h1{font-family:'Libre Baskerville',serif;font-size:17px;color:#fff;font-weight:700;line-height:1.1;letter-spacing:0.2px;}
+.brand-text span{font-size:10px;color:rgba(255,255,255,0.6);letter-spacing:2px;text-transform:uppercase;}
+.topbar-right{display:flex;align-items:center;gap:24px;}
+.live-clock{background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.15);border-radius:8px;padding:6px 14px;display:flex;align-items:center;gap:10px;}
+.clock-time{font-family:'JetBrains Mono',monospace;font-size:14px;color:#fff;font-weight:500;letter-spacing:1px;}
+.clock-date{font-size:11px;color:rgba(255,255,255,0.65);font-weight:400;}
+.topbar-stats{display:flex;gap:16px;}
+.tstat{display:flex;align-items:center;gap:6px;font-size:12px;color:rgba(255,255,255,0.7);}
+.tstat strong{color:var(--accent-light);font-weight:600;font-size:13px;}
+
+/* ── HERO ── */
+.hero{background:linear-gradient(135deg,var(--primary) 0%,var(--primary-mid) 60%,var(--primary-light) 100%);padding:40px 32px 36px;position:relative;overflow:hidden;}
+.hero::after{content:'';position:absolute;right:-60px;top:-60px;width:340px;height:340px;border-radius:50%;background:rgba(255,255,255,0.04);pointer-events:none;}
+.hero-inner{max-width:1400px;margin:0 auto;position:relative;z-index:1;}
+.hero h2{font-family:'Libre Baskerville',serif;font-size:clamp(26px,3.5vw,42px);color:#fff;font-weight:700;line-height:1.15;margin-bottom:8px;}
+.hero h2 em{font-style:italic;color:var(--accent-light);}
+.hero p{color:rgba(255,255,255,0.72);font-size:15px;max-width:520px;line-height:1.6;}
+
+/* ── CONTROLS ── */
+.controls-bar{background:var(--white);border-bottom:1px solid var(--border);box-shadow:var(--shadow-sm);position:sticky;top:60px;z-index:90;}
+.controls-inner{max-width:1400px;margin:0 auto;padding:14px 32px;display:flex;flex-direction:column;gap:10px;}
+.controls-row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;}
+.search-box{position:relative;flex:1;min-width:240px;}
+.search-box svg{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--text-light);pointer-events:none;}
+input[type=text]{width:100%;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text);font-family:'Inter',sans-serif;font-size:14px;padding:10px 14px 10px 40px;outline:none;transition:border-color .2s,box-shadow .2s;}
+input[type=text]:focus{border-color:var(--primary-light);box-shadow:0 0 0 3px rgba(38,86,168,0.1);}
+input[type=text]::placeholder{color:var(--text-light);}
+select.filter-select{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text);font-family:'Inter',sans-serif;font-size:13px;padding:10px 36px 10px 14px;outline:none;cursor:pointer;transition:border-color .2s;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%236b7fa3' fill='none' stroke-width='1.5'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;min-width:200px;}
+select.filter-select option{background:var(--white);}
+select.filter-select:focus{border-color:var(--primary-light);}
+.filter-tags{display:flex;gap:6px;flex-wrap:wrap;align-items:center;}
+.filter-tag{padding:5px 13px;border-radius:100px;font-size:12px;font-weight:500;cursor:pointer;border:1.5px solid transparent;transition:all .18s;user-select:none;}
+.filter-tag.all{background:var(--primary);color:#fff;border-color:var(--primary);}
+.filter-tag.all-inactive{background:transparent;color:var(--text-muted);border-color:var(--border);}
+.filter-tag.commercial{background:transparent;color:var(--text-muted);border-color:var(--border);}
+.filter-tag.commercial.active{background:var(--blue-bg);color:var(--blue);border-color:var(--blue);}
+.filter-tag.government{background:transparent;color:var(--text-muted);border-color:var(--border);}
+.filter-tag.government.active{background:var(--green-bg);color:var(--green);border-color:var(--green);}
+.filter-tag.specialized{background:transparent;color:var(--text-muted);border-color:var(--border);}
+.filter-tag.specialized.active{background:var(--orange-bg);color:var(--orange);border-color:var(--orange);}
+.filter-tag:hover{opacity:.82;}
+.results-info{font-size:12px;color:var(--text-muted);margin-left:4px;}
+.results-info strong{color:var(--primary);font-weight:600;}
+
+/* ── MAIN LAYOUT ── */
+.main-layout{max-width:1400px;margin:0 auto;padding:20px 32px 40px;display:grid;grid-template-columns:280px 1fr;gap:18px;align-items:start;position:relative;z-index:1;}
+
+/* ── BANK PANEL ── */
+.bank-panel{background:var(--white);border:1px solid var(--border);border-radius:16px;overflow:hidden;position:sticky;top:142px;max-height:calc(100vh - 162px);display:flex;flex-direction:column;box-shadow:var(--shadow-sm);}
+.bank-panel-header{padding:12px 18px;border-bottom:1px solid var(--border);font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--text-muted);font-weight:600;background:var(--bg2);}
+.bank-list{overflow-y:auto;flex:1;scrollbar-width:thin;scrollbar-color:var(--border) transparent;}
+.bank-list::-webkit-scrollbar{width:4px;}
+.bank-list::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px;}
+.bank-item{padding:10px 16px;cursor:pointer;border-bottom:1px solid var(--bg2);transition:background .12s;display:flex;align-items:center;justify-content:space-between;gap:8px;}
+.bank-item:hover{background:var(--bg);}
+.bank-item.active{background:var(--blue-bg);border-left:3px solid var(--primary);}
+.bank-item-name{font-size:12.5px;font-weight:500;color:var(--text-mid);line-height:1.3;flex:1;}
+.bank-item.active .bank-item-name{color:var(--primary);font-weight:600;}
+.bank-badge{font-size:9.5px;padding:2px 7px;border-radius:100px;font-weight:600;flex-shrink:0;letter-spacing:0.3px;}
+.badge-commercial{background:var(--blue-bg);color:var(--blue);}
+.badge-government{background:var(--green-bg);color:var(--green);}
+.badge-specialized{background:var(--orange-bg);color:var(--orange);}
+
+/* ── BRANCH PANEL ── */
+.branch-panel{flex:1;min-width:0;}
+
+/* Bank header card */
+.bank-header-card{background:linear-gradient(135deg,var(--primary) 0%,var(--primary-mid) 100%);border-radius:16px;padding:24px 28px;margin-bottom:16px;display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:16px;box-shadow:var(--shadow);}
+.bank-header-card h3{font-family:'Libre Baskerville',serif;font-size:22px;font-weight:700;color:#fff;margin-bottom:8px;}
+.bank-meta{display:flex;gap:12px;align-items:flex-start;flex-wrap:wrap;}
+.bank-meta-item{font-size:12.5px;color:rgba(255,255,255,0.72);display:flex;align-items:center;gap:5px;}
+.bank-meta-item strong{color:rgba(255,255,255,0.95);font-weight:500;}
+.bank-meta-item a{color:var(--accent-light);text-decoration:none;font-weight:500;border-bottom:1px solid rgba(212,173,87,0.4);transition:opacity .15s;}
+.bank-meta-item a:hover{opacity:.82;}
+.bank-header-right{display:flex;flex-direction:column;align-items:flex-end;gap:8px;}
+.branch-count-badge{background:linear-gradient(135deg,var(--accent),var(--accent-light));color:var(--primary);font-weight:700;font-size:26px;font-family:'JetBrains Mono',monospace;padding:10px 18px;border-radius:var(--radius-sm);text-align:center;line-height:1;box-shadow:0 2px 12px rgba(184,150,62,0.3);}
+.branch-count-badge small{display:block;font-size:9px;font-family:'Inter',sans-serif;letter-spacing:1.5px;text-transform:uppercase;margin-top:2px;font-weight:600;}
+.website-btn{background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.2);color:#fff;border-radius:8px;padding:7px 16px;font-size:12px;font-weight:500;text-decoration:none;display:inline-flex;align-items:center;gap:6px;transition:background .15s,border-color .15s;font-family:'Inter',sans-serif;}
+.website-btn:hover{background:rgba(255,255,255,0.2);border-color:rgba(255,255,255,0.35);}
+.bank-contact-strip{background:var(--white);border:1px solid var(--border);border-radius:10px;padding:12px 18px;margin-bottom:14px;display:flex;gap:24px;align-items:center;flex-wrap:wrap;box-shadow:var(--shadow-sm);}
+.contact-item{display:flex;align-items:center;gap:7px;font-size:12.5px;color:var(--text-mid);}
+.contact-item svg{color:var(--primary-light);flex-shrink:0;}
+.contact-item a{color:var(--primary);text-decoration:none;font-weight:500;}
+.contact-item a:hover{text-decoration:underline;}
+
+/* Table */
+.table-wrap{background:var(--white);border:1px solid var(--border);border-radius:16px;overflow:hidden;box-shadow:var(--shadow-sm);}
+.branch-table-header{padding:12px 18px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border);background:var(--bg2);flex-wrap:wrap;gap:8px;}
+.branch-search-wrap{position:relative;}
+.branch-search-wrap svg{position:absolute;left:11px;top:50%;transform:translateY(-50%);color:var(--text-light);pointer-events:none;}
+.branch-search{background:var(--white);border:1px solid var(--border);border-radius:7px;color:var(--text);font-family:'Inter',sans-serif;font-size:13px;padding:7px 12px 7px 32px;outline:none;width:210px;transition:border-color .2s;}
+.branch-search:focus{border-color:var(--primary-light);}
+.branch-search::placeholder{color:var(--text-light);}
+table{width:100%;border-collapse:collapse;}
+thead th{padding:11px 18px;text-align:left;font-size:10.5px;letter-spacing:1.5px;text-transform:uppercase;color:var(--text-muted);font-weight:600;border-bottom:1px solid var(--border);background:var(--bg2);white-space:nowrap;}
+tbody tr{border-bottom:1px solid var(--bg2);transition:background .12s;}
+tbody tr:last-child{border-bottom:none;}
+tbody tr:hover{background:var(--bg);}
+tbody td{padding:11px 18px;font-size:13.5px;vertical-align:middle;}
+.td-num{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text-light);width:40px;}
+.td-branch{color:var(--text);font-weight:500;}
+.td-code{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--primary);font-weight:600;}
+.td-bankcode{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--text-muted);}
+.copy-btn{background:none;border:1px solid transparent;cursor:pointer;color:var(--text-light);padding:4px 7px;border-radius:6px;transition:color .15s,background .15s,border-color .15s;font-size:12px;}
+.copy-btn:hover{color:var(--primary);background:var(--blue-bg);border-color:var(--border);}
+.empty-state{padding:60px 20px;text-align:center;color:var(--text-muted);}
+.empty-state .empty-icon{font-size:44px;margin-bottom:14px;opacity:.3;}
+.empty-state h4{font-size:16px;color:var(--text-mid);margin-bottom:8px;}
+.empty-state p{font-size:13px;}
+
+/* Welcome */
+.welcome-panel{background:var(--white);border:1px solid var(--border);border-radius:16px;padding:60px 40px;text-align:center;box-shadow:var(--shadow-sm);}
+.welcome-panel .w-icon{font-size:56px;margin-bottom:16px;opacity:.35;}
+.welcome-panel h3{font-family:'Libre Baskerville',serif;font-size:22px;margin-bottom:10px;color:var(--primary);}
+.welcome-panel p{color:var(--text-muted);font-size:14px;line-height:1.7;max-width:460px;margin:0 auto;}
+
+/* Pagination */
+.pagination{padding:12px 18px;display:flex;align-items:center;justify-content:space-between;border-top:1px solid var(--border);background:var(--bg2);font-size:12px;color:var(--text-muted);flex-wrap:wrap;gap:8px;}
+.page-btns{display:flex;gap:5px;}
+.page-btn{background:var(--white);border:1px solid var(--border);color:var(--text-mid);border-radius:7px;padding:5px 12px;font-size:12px;cursor:pointer;transition:all .15s;font-family:'Inter',sans-serif;}
+.page-btn:hover{background:var(--blue-bg);border-color:var(--primary);color:var(--primary);}
+.page-btn.active{background:var(--primary);color:#fff;border-color:var(--primary);font-weight:600;}
+.page-btn:disabled{opacity:.35;cursor:not-allowed;}
+
+/* Toast */
+.toast{position:fixed;bottom:28px;right:28px;background:var(--primary);color:#fff;padding:11px 20px;border-radius:10px;font-weight:500;font-size:13px;box-shadow:var(--shadow-lg);transform:translateY(80px);opacity:0;transition:all .3s cubic-bezier(.34,1.56,.64,1);z-index:999;}
+.toast.show{transform:translateY(0);opacity:1;}
+
+/* Footer */
+footer{background:var(--primary);color:rgba(255,255,255,0.7);text-align:center;padding:18px 32px;font-size:12.5px;line-height:1.7;position:relative;z-index:1;}
+footer a{color:var(--accent-light);text-decoration:none;}
+footer a:hover{text-decoration:underline;}
+footer strong{color:rgba(255,255,255,0.92);}
+
+/* Highlight */
+.highlight{background:rgba(184,150,62,0.22);border-radius:2px;padding:0 2px;color:var(--accent);}
+
+/* No-branch note */
+.no-branch-note{background:var(--bg2);border:1px dashed var(--border);border-radius:10px;padding:20px;text-align:center;color:var(--text-muted);font-size:13px;margin-top:8px;}
+
+/* Scrollbar */
+::-webkit-scrollbar{width:6px;height:6px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px;}
+::-webkit-scrollbar-thumb:hover{background:var(--text-light);}
+
+@media(max-width:900px){
+  .topbar-inner,.hero-inner,.controls-inner,.main-layout{padding-left:16px;padding-right:16px;}
+  .main-layout{grid-template-columns:1fr;}
+  .bank-panel{position:static;max-height:280px;}
+  .topbar-stats{display:none;}
+  .hero{padding:28px 16px 24px;}
+}
+</style>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<header class="topbar">
+  <div class="topbar-inner">
+    <div class="brand">
+      <div class="brand-icon">🏦</div>
+      <div class="brand-text">
+        <h1>LK Bank Directory</h1>
+        <span>Sri Lanka Banking Reference</span>
+      </div>
+    </div>
+    <div class="topbar-right">
+      <div class="live-clock">
+        <div>
+          <div class="clock-time" id="clockTime">--:--:--</div>
+          <div class="clock-date" id="clockDate">Loading...</div>
+        </div>
+      </div>
+      <div class="topbar-stats">
+        <div class="tstat">Banks: <strong id="stat-banks">0</strong></div>
+        <div class="tstat">Branches: <strong id="stat-branches">0</strong></div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-inner">
+    <h2>Sri Lanka Bank<em>Branch Finder</em></h2>
+    <p>Search across all licensed commercial, government, and specialized banks in Sri Lanka. Find branch codes, SWIFT codes, and contact details instantly.</p>
+  </div>
+</div>
+
+<!-- CONTROLS -->
+<div class="controls-bar">
+  <div class="controls-inner">
+    <div class="controls-row">
+      <div class="search-box">
+        <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        <input type="text" id="globalSearch" placeholder="Search bank name or branch…" oninput="handleGlobalSearch()">
+      </div>
+      <select class="filter-select" id="bankTypeFilter" onchange="handleTypeFilter()">
+        <option value="">All Bank Types</option>
+        <option value="commercial">Licensed Commercial Banks</option>
+        <option value="government">Government / State-Owned Banks</option>
+        <option value="specialized">Licensed Specialized Banks</option>
+      </select>
+      <select class="filter-select" id="bankSelectDropdown" onchange="handleDropdownSelect()">
+        <option value="">— Jump to a Bank —</option>
+      </select>
+    </div>
+    <div class="filter-tags">
+      <div class="filter-tag all" id="tag-all" onclick="setTypeFilter('')">All</div>
+      <div class="filter-tag commercial" id="tag-commercial" onclick="setTypeFilter('commercial')">🏦 Commercial</div>
+      <div class="filter-tag government" id="tag-government" onclick="setTypeFilter('government')">🏛️ Government</div>
+      <div class="filter-tag specialized" id="tag-specialized" onclick="setTypeFilter('specialized')">🔧 Specialized</div>
+      <span class="results-info" id="results-info"></span>
+    </div>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div class="main-layout">
+  <div class="bank-panel">
+    <div class="bank-panel-header">Banks Directory</div>
+    <div class="bank-list" id="bankList"></div>
+  </div>
+  <div class="branch-panel" id="branchPanel">
+    <div class="welcome-panel">
+      <div class="w-icon">🏛️</div>
+      <h3>Select a Bank to View Branches</h3>
+      <p>Click any bank from the list on the left, or use the search above to find a specific branch or code across all Sri Lankan banks.</p>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <p>© 2026 | Created by <strong>Yasobalaji Ravichandren</strong> | <a href="mailto:Yasobalaji_R@hotmail.com">Yasobalaji_R@hotmail.com</a></p>
+  <p style="margin-top:4px;font-size:11px;opacity:.55;">Data sourced from CBSL-licensed institutions. For official rates and details, visit each bank's website.</p>
+</footer>
+
+<div class="toast" id="toast">✓ Copied!</div>
+
+<script>
+const BANKS = [
+{
+"id": 1,
+"name": "Bank of Ceylon (BOC)",
+"bankCode": 7010,
+"type": "commercial",
+"swift": "BCEYLKLX",
+"phone": "1975",
+"address": "BOC Square, Colombo 01",
+"email": "boc@boc.lk",
+"website": "https://www.boc.lk",
+"branches": [
+{
+"code": 448,
+"name": "Addalachchenai"
+},
+{
+"code": 487,
+"name": "Adikarigama"
+},
+{
+"code": 657,
+"name": "Agalawatta"
+},
+{
+"code": 488,
+"name": "Agarapathana"
+},
+{
+"code": 276,
+"name": "Ahangama"
+},
+{
+"code": 754,
+"name": "Ahungalla"
+},
+{
+"code": 590,
+"name": "Akkaraipattu"
+},
+{
+"code": 489,
+"name": "Akurana"
+},
+{
+"code": 613,
+"name": "Akuressa"
+},
+{
+"code": 812,
+"name": "Aladeniya"
+},
+{
+"code": 449,
+"name": "Alankerny"
+},
+{
+"code": 380,
+"name": "Alaveddy"
+},
+{
+"code": 768,
+"name": "Alawathugoda"
+},
+{
+"code": 498,
+"name": "Alawwa"
+},
+{
+"code": 680,
+"name": "Aluthgama"
+},
+{
+"code": 32,
+"name": "Aluthkade"
+},
+{
+"code": 277,
+"name": "Aluthwala"
+},
+{
+"code": 47,
+"name": "Ambalangoda"
+},
+{
+"code": 537,
+"name": "Ambalantota"
+},
+{
+"code": 329,
+"name": "Ambanpola"
+},
+{
+"code": 21,
+"name": "Ampara"
+},
+{
+"code": 548,
+"name": "Anamaduwa"
+},
+{
+"code": 330,
+"name": "Anawilundawa"
+},
+{
+"code": 381,
+"name": "Andankulam"
+},
+{
+"code": 494,
+"name": "Andiambalama"
+},
+{
+"code": 774,
+"name": "Angunakolapelessa"
+},
+{
+"code": 490,
+"name": "Ankumbura"
+},
+{
+"code": 22,
+"name": "Anuradhapura"
+},
+{
+"code": 551,
+"name": "Anuradhapura Bazzar"
+},
+{
+"code": 98,
+"name": "Anuradhapura New Town"
+},
+{
+"code": 451,
+"name": "Araiyampathy"
+},
+{
+"code": 599,
+"name": "Aralaganwila"
+},
+{
+"code": 566,
+"name": "Aranayake"
+},
+{
+"code": 713,
+"name": "Asiri Central"
+},
+{
+"code": 778,
+"name": "Atchuvely"
+},
+{
+"code": 757,
+"name": "Athurugiriya"
+},
+{
+"code": 530,
+"name": "Avissawella"
+},
+{
+"code": 401,
+"name": "Ayagama"
+},
+{
+"code": 540,
+"name": "Badalkumbura"
+},
+{
+"code": 525,
+"name": "Baddegama"
+},
+{
+"code": 11,
+"name": "Badulla"
+},
+{
+"code": 729,
+"name": "Badulla City"
+},
+{
+"code": 662,
+"name": "Baduraliya"
+},
+{
+"code": 652,
+"name": "Bakamuna"
+},
+{
+"code": 688,
+"name": "Balangoda"
+},
+{
+"code": 320,
+"name": "Ballaketuwa"
+},
+{
+"code": 37,
+"name": "Bambalapitiya"
+},
+{
+"code": 665,
+"name": "Bandaragama"
+},
+{
+"code": 515,
+"name": "Bandarawela"
+},
+{
+"code": 278,
+"name": "Barawakumbura"
+},
+{
+"code": 522,
+"name": "Batapola"
+},
+{
+"code": 679,
+"name": "Battaramulla"
+},
+{
+"code": 12,
+"name": "Batticaloa"
+},
+{
+"code": 452,
+"name": "Batticaloa Town"
+},
+{
+"code": 708,
+"name": "Batuwatte"
+},
+{
+"code": 539,
+"name": "Beliatta"
+},
+{
+"code": 102,
+"name": "Bentota"
+},
+{
+"code": 58,
+"name": "Beruwala"
+},
+{
+"code": 579,
+"name": "Bibile"
+},
+{
+"code": 554,
+"name": "Bingiriya"
+},
+{
+"code": 732,
+"name": "Biyagama"
+},
+{
+"code": 788,
+"name": "BOC premier"
+},
+{
+"code": 699,
+"name": "Bogahakumbura"
+},
+{
+"code": 808,
+"name": "Bogaswewa"
+},
+{
+"code": 491,
+"name": "Bogawantalawa"
+},
+{
+"code": 465,
+"name": "Bokkawala"
+},
+{
+"code": 651,
+"name": "Bombuwela"
+},
+{
+"code": 711,
+"name": "Bopitiya"
+},
+{
+"code": 795,
+"name": "Boragas"
+},
+{
+"code": 646,
+"name": "Boralesgamuwa"
+},
+{
+"code": 668,
+"name": "Borella  2nd"
+},
+{
+"code": 38,
+"name": "Borella S/G"
+},
+{
+"code": 462,
+"name": "Botanical Gardens Peradeniya"
+},
+{
+"code": 311,
+"name": "Bulathkohupitiya"
+},
+{
+"code": 673,
+"name": "Bulathsinhala"
+},
+{
+"code": 560,
+"name": "Buttala"
+},
+{
+"code": 573,
+"name": "Central Bus Stand"
+},
+{
+"code": 811,
+"name": "Central Camp"
+},
+{
+"code": 15,
+"name": "Central Office"
+},
+{
+"code": 672,
+"name": "Central Super Market"
+},
+{
+"code": 731,
+"name": "CEYBANK Credit card centre"
+},
+{
+"code": 792,
+"name": "Chankanai"
+},
+{
+"code": 501,
+"name": "Chavakachcheri"
+},
+{
+"code": 382,
+"name": "Cheddikulam"
+},
+{
+"code": 630,
+"name": "Chenkalady"
+},
+{
+"code": 20,
+"name": "Chilaw"
+},
+{
+"code": 436,
+"name": "China Bay"
+},
+{
+"code": 53,
+"name": "Chunnakam"
+},
+{
+"code": 1,
+"name": "City Office"
+},
+{
+"code": 660,
+"name": "Corporate"
+},
+{
+"code": 822,
+"name": "Corporate 2nd"
+},
+{
+"code": 474,
+"name": "Court Complex Kandy"
+},
+{
+"code": 715,
+"name": "Dalugama"
+},
+{
+"code": 331,
+"name": "Dambadeniya"
+},
+{
+"code": 700,
+"name": "Dambagalla"
+},
+{
+"code": 576,
+"name": "Dambulla"
+},
+{
+"code": 497,
+"name": "Dankotuwa"
+},
+{
+"code": 466,
+"name": "Danture"
+},
+{
+"code": 467,
+"name": "Daulagala"
+},
+{
+"code": 567,
+"name": "Dedicated Economic Centre – Meegoda"
+},
+{
+"code": 686,
+"name": "Dehiattakandiya"
+},
+{
+"code": 634,
+"name": "Dehiowita"
+},
+{
+"code": 51,
+"name": "Dehiwala"
+},
+{
+"code": 784,
+"name": "Deiyandara"
+},
+{
+"code": 383,
+"name": "Delft"
+},
+{
+"code": 716,
+"name": "Delgoda"
+},
+{
+"code": 717,
+"name": "Demanhandiya"
+},
+{
+"code": 561,
+"name": "Dematagoda"
+},
+{
+"code": 528,
+"name": "Deniyaya"
+},
+{
+"code": 642,
+"name": "Deraniyagala"
+},
+{
+"code": 504,
+"name": "Devinuwara"
+},
+{
+"code": 563,
+"name": "Dharga Town"
+},
+{
+"code": 273,
+"name": "Digana"
+},
+{
+"code": 469,
+"name": "Digana Village"
+},
+{
+"code": 592,
+"name": "Dikwella"
+},
+{
+"code": 433,
+"name": "Divulapitiya"
+},
+{
+"code": 388,
+"name": "Diyabeduma"
+},
+{
+"code": 389,
+"name": "Diyasenpura"
+},
+{
+"code": 260,
+"name": "Diyatalawa"
+},
+{
+"code": 293,
+"name": "Dodangoda"
+},
+{
+"code": 390,
+"name": "Doramadalawa"
+},
+{
+"code": 580,
+"name": "Dummalasuriya"
+},
+{
+"code": 437,
+"name": "Eastern University"
+},
+{
+"code": 57,
+"name": "Eheliyagoda"
+},
+{
+"code": 258,
+"name": "Elakanda"
+},
+{
+"code": 777,
+"name": "Electronic Banking Unit"
+},
+{
+"code": 701,
+"name": "Ella"
+},
+{
+"code": 619,
+"name": "Elpitiya"
+},
+{
+"code": 535,
+"name": "Embilipitiya"
+},
+{
+"code": 312,
+"name": "Embilipitiya City"
+},
+{
+"code": 313,
+"name": "Endana"
+},
+{
+"code": 674,
+"name": "Enderamulla"
+},
+{
+"code": 692,
+"name": "Eppawala"
+},
+{
+"code": 790,
+"name": "Eravur"
+},
+{
+"code": 702,
+"name": "Ethiliwewa"
+},
+{
+"code": 810,
+"name": "Ethimale"
+},
+{
+"code": 476,
+"name": "Ettampitiya"
+},
+{
+"code": 60,
+"name": "Fifth City"
+},
+{
+"code": 718,
+"name": "Fish Market Peliyagoda"
+},
+{
+"code": 615,
+"name": "Galagedera"
+},
+{
+"code": 101,
+"name": "Galaha"
+},
+{
+"code": 391,
+"name": "Galamuna"
+},
+{
+"code": 122,
+"name": "Galenbindunuwewa"
+},
+{
+"code": 432,
+"name": "Galewela"
+},
+{
+"code": 549,
+"name": "Galgamuwa"
+},
+{
+"code": 314,
+"name": "Galigamuwa"
+},
+{
+"code": 653,
+"name": "Galkiriyagama"
+},
+{
+"code": 89,
+"name": "Galle Bazaar"
+},
+{
+"code": 3,
+"name": "Galle Fort"
+},
+{
+"code": 514,
+"name": "Galnewa"
+},
+{
+"code": 45,
+"name": "Gampaha S/G"
+},
+{
+"code": 575,
+"name": "Gampola"
+},
+{
+"code": 470,
+"name": "Gampola City"
+},
+{
+"code": 720,
+"name": "Ganemulla"
+},
+{
+"code": 524,
+"name": "Geli Oya"
+},
+{
+"code": 392,
+"name": "General Hospital, A’ pura"
+},
+{
+"code": 471,
+"name": "Ginigathhena"
+},
+{
+"code": 669,
+"name": "Girandurukotte"
+},
+{
+"code": 553,
+"name": "Giriulla"
+},
+{
+"code": 786,
+"name": "Godakawela"
+},
+{
+"code": 316,
+"name": "Gonagaldeniya"
+},
+{
+"code": 438,
+"name": "Gonagolla"
+},
+{
+"code": 643,
+"name": "Gonapola"
+},
+{
+"code": 721,
+"name": "Gothatuwa"
+},
+{
+"code": 628,
+"name": "Grandpass"
+},
+{
+"code": 393,
+"name": "Habarana"
+},
+{
+"code": 691,
+"name": "Hakmana"
+},
+{
+"code": 463,
+"name": "Haldummulla"
+},
+{
+"code": 785,
+"name": "Hali ela"
+},
+{
+"code": 85,
+"name": "Hambantota"
+},
+{
+"code": 741,
+"name": "Hanwella"
+},
+{
+"code": 35,
+"name": "Haputale"
+},
+{
+"code": 365,
+"name": "Hasalaka"
+},
+{
+"code": 472,
+"name": "Hatharaliyadda"
+},
+{
+"code": 40,
+"name": "Hatton"
+},
+{
+"code": 999,
+"name": "Head Office"
+},
+{
+"code": 772,
+"name": "Hemmathagama"
+},
+{
+"code": 570,
+"name": "Hettipola"
+},
+{
+"code": 609,
+"name": "Hikkaduwa"
+},
+{
+"code": 601,
+"name": "Hingurakgoda"
+},
+{
+"code": 509,
+"name": "Hingurana"
+},
+{
+"code": 569,
+"name": "Hiripitiya"
+},
+{
+"code": 568,
+"name": "Homagama"
+},
+{
+"code": 54,
+"name": "Horana"
+},
+{
+"code": 217,
+"name": "Horowpathana"
+},
+{
+"code": 521,
+"name": "Hyde Park"
+},
+{
+"code": 770,
+"name": "Ibbagamuwa"
+},
+{
+"code": 377,
+"name": "Illavalai"
+},
+{
+"code": 135,
+"name": "Imaduwa"
+},
+{
+"code": 453,
+"name": "Independent  Square"
+},
+{
+"code": 604,
+"name": "Ingiriya"
+},
+{
+"code": 87,
+"name": "International Division"
+},
+{
+"code": 236,
+"name": "Ipalogama"
+},
+{
+"code": 439,
+"name": "Irakkamam"
+},
+{
+"code": 776,
+"name": "Islamic Banking Unit"
+},
+{
+"code": 39,
+"name": "Ja Ela"
+},
+{
+"code": 5,
+"name": "Jaffna"
+},
+{
+"code": 500,
+"name": "Jaffna 2nd Branch"
+},
+{
+"code": 366,
+"name": "Jaffna Bus Stand"
+},
+{
+"code": 368,
+"name": "Jaffna Main Street"
+},
+{
+"code": 369,
+"name": "Jaffna University"
+},
+{
+"code": 600,
+"name": "Jayanthipura"
+},
+{
+"code": 59,
+"name": "Kadawatha"
+},
+{
+"code": 780,
+"name": "Kadawatha 2nd City"
+},
+{
+"code": 502,
+"name": "Kaduruwela"
+},
+{
+"code": 608,
+"name": "Kaduwela"
+},
+{
+"code": 622,
+"name": "Kahatagasdigiliya"
+},
+{
+"code": 507,
+"name": "Kahawatte"
+},
+{
+"code": 370,
+"name": "Kaithady"
+},
+{
+"code": 645,
+"name": "Kalawana"
+},
+{
+"code": 426,
+"name": "Kallady"
+},
+{
+"code": 427,
+"name": "Kallar"
+},
+{
+"code": 510,
+"name": "Kalmunai"
+},
+{
+"code": 589,
+"name": "Kalpitiya"
+},
+{
+"code": 16,
+"name": "Kalutara S/G"
+},
+{
+"code": 611,
+"name": "Kaluwanchikudy"
+},
+{
+"code": 371,
+"name": "Kalviyankadu"
+},
+{
+"code": 529,
+"name": "Kamburupitiya"
+},
+{
+"code": 771,
+"name": "Kandana"
+},
+{
+"code": 633,
+"name": "Kandapola"
+},
+{
+"code": 2,
+"name": "Kandy"
+},
+{
+"code": 649,
+"name": "Kandy 2nd"
+},
+{
+"code": 473,
+"name": "Kandy City Centre"
+},
+{
+"code": 454,
+"name": "Kandy Hospital"
+},
+{
+"code": 605,
+"name": "Kankesanthurai"
+},
+{
+"code": 623,
+"name": "Kantale Bazaar"
+},
+{
+"code": 428,
+"name": "Karadiyanaru"
+},
+{
+"code": 749,
+"name": "Karainagar"
+},
+{
+"code": 429,
+"name": "Karaitivu"
+},
+{
+"code": 372,
+"name": "Karanavai"
+},
+{
+"code": 280,
+"name": "Karapitiya"
+},
+{
+"code": 294,
+"name": "Karawanella"
+},
+{
+"code": 295,
+"name": "Karawita"
+},
+{
+"code": 722,
+"name": "Katana"
+},
+{
+"code": 616,
+"name": "Kataragama"
+},
+{
+"code": 648,
+"name": "Kattankudy"
+},
+{
+"code": 30,
+"name": "Katubedda"
+},
+{
+"code": 666,
+"name": "Katugastota"
+},
+{
+"code": 625,
+"name": "Katukurunda"
+},
+{
+"code": 658,
+"name": "Katunayake I.P.Z."
+},
+{
+"code": 332,
+"name": "Katuneriya"
+},
+{
+"code": 333,
+"name": "Katupotha"
+},
+{
+"code": 261,
+"name": "Katuwana"
+},
+{
+"code": 714,
+"name": "Katuwellegama Courtaulds Clothing Lanka (Pvt) Ltd"
+},
+{
+"code": 373,
+"name": "Kayts"
+},
+{
+"code": 621,
+"name": "Kebithigollawa"
+},
+{
+"code": 27,
+"name": "Kegalle"
+},
+{
+"code": 536,
+"name": "Kegalle Bazaar"
+},
+{
+"code": 297,
+"name": "Kegalle Hospital"
+},
+{
+"code": 262,
+"name": "Kekanadura"
+},
+{
+"code": 676,
+"name": "Kekirawa"
+},
+{
+"code": 703,
+"name": "Keppetipola"
+},
+{
+"code": 620,
+"name": "Kesbewa"
+},
+{
+"code": 617,
+"name": "Keselwatte"
+},
+{
+"code": 93,
+"name": "Kilinochchi"
+},
+{
+"code": 735,
+"name": "Kinniya"
+},
+{
+"code": 430,
+"name": "Kiran"
+},
+{
+"code": 543,
+"name": "Kiribathgoda"
+},
+{
+"code": 317,
+"name": "Kiriella"
+},
+{
+"code": 334,
+"name": "Kirimetiyana"
+},
+{
+"code": 571,
+"name": "Kirindiwela"
+},
+{
+"code": 602,
+"name": "Kirulapana"
+},
+{
+"code": 282,
+"name": "Kitulgala"
+},
+{
+"code": 172,
+"name": "Kobeigane"
+},
+{
+"code": 323,
+"name": "Kochchikade"
+},
+{
+"code": 375,
+"name": "Kodikamam"
+},
+{
+"code": 750,
+"name": "Koggala E.P.Z"
+},
+{
+"code": 431,
+"name": "Kokkadicholai"
+},
+{
+"code": 376,
+"name": "Kokuvil"
+},
+{
+"code": 34,
+"name": "Kollupitiya"
+},
+{
+"code": 670,
+"name": "Kollupitiya 2nd"
+},
+{
+"code": 283,
+"name": "Kolonna"
+},
+{
+"code": 595,
+"name": "Kolonnawa"
+},
+{
+"code": 787,
+"name": "Kopay"
+},
+{
+"code": 629,
+"name": "Koslanda"
+},
+{
+"code": 263,
+"name": "Kosmodera"
+},
+{
+"code": 455,
+"name": "Kotagala"
+},
+{
+"code": 663,
+"name": "Kotahena"
+},
+{
+"code": 813,
+"name": "Kothalawala Defence University"
+},
+{
+"code": 284,
+"name": "Kotiyakumbura"
+},
+{
+"code": 773,
+"name": "Kottawa"
+},
+{
+"code": 264,
+"name": "Kudawella"
+},
+{
+"code": 52,
+"name": "Kuliyapitiya"
+},
+{
+"code": 324,
+"name": "Kumbukgete"
+},
+{
+"code": 809,
+"name": "Kurunduwatte"
+},
+{
+"code": 9,
+"name": "Kurunegala"
+},
+{
+"code": 513,
+"name": "Kurunegala Bazaar"
+},
+{
+"code": 325,
+"name": "Kuruwita"
+},
+{
+"code": 636,
+"name": "Lake House"
+},
+{
+"code": 612,
+"name": "Lake View"
+},
+{
+"code": 603,
+"name": "Lanka Hospital"
+},
+{
+"code": 577,
+"name": "Lunugala"
+},
+{
+"code": 265,
+"name": "Lunugamvehera"
+},
+{
+"code": 647,
+"name": "Lunuwatte"
+},
+{
+"code": 544,
+"name": "Madampe"
+},
+{
+"code": 654,
+"name": "Madatugama"
+},
+{
+"code": 805,
+"name": "Madawakkulama"
+},
+{
+"code": 581,
+"name": "Madawala"
+},
+{
+"code": 378,
+"name": "Madhu"
+},
+{
+"code": 565,
+"name": "Madurankuliya"
+},
+{
+"code": 266,
+"name": "Maha-Edanda"
+},
+{
+"code": 806,
+"name": "Mahaoya"
+},
+{
+"code": 55,
+"name": "Maharagama"
+},
+{
+"code": 319,
+"name": "Mahawewa"
+},
+{
+"code": 542,
+"name": "Mahiyangana"
+},
+{
+"code": 564,
+"name": "Maho"
+},
+{
+"code": 26,
+"name": "Main Street"
+},
+{
+"code": 299,
+"name": "Makandura"
+},
+{
+"code": 267,
+"name": "Makandura – Matara"
+},
+{
+"code": 789,
+"name": "Makola"
+},
+{
+"code": 763,
+"name": "Malabe"
+},
+{
+"code": 268,
+"name": "Malimbada"
+},
+{
+"code": 255,
+"name": "Malkaduwawa"
+},
+{
+"code": 349,
+"name": "Mallavi"
+},
+{
+"code": 422,
+"name": "Malwatte"
+},
+{
+"code": 423,
+"name": "Mamangama"
+},
+{
+"code": 281,
+"name": "Manipay"
+},
+{
+"code": 574,
+"name": "Mankulam"
+},
+{
+"code": 46,
+"name": "Mannar"
+},
+{
+"code": 351,
+"name": "Manthikai"
+},
+{
+"code": 41,
+"name": "Maradana"
+},
+{
+"code": 456,
+"name": "Marassana"
+},
+{
+"code": 300,
+"name": "Marawila"
+},
+{
+"code": 424,
+"name": "Maruthamunai"
+},
+{
+"code": 352,
+"name": "Maruthankerny"
+},
+{
+"code": 506,
+"name": "Maskeliya"
+},
+{
+"code": 68,
+"name": "Matale"
+},
+{
+"code": 24,
+"name": "Matara"
+},
+{
+"code": 614,
+"name": "Matara City"
+},
+{
+"code": 796,
+"name": "Mattala Airport"
+},
+{
+"code": 583,
+"name": "Mattegoda"
+},
+{
+"code": 556,
+"name": "Matugama"
+},
+{
+"code": 559,
+"name": "Mawanella"
+},
+{
+"code": 257,
+"name": "Mawathagama"
+},
+{
+"code": 238,
+"name": "Medagama"
+},
+{
+"code": 162,
+"name": "Medawachchiya"
+},
+{
+"code": 797,
+"name": "Medawala"
+},
+{
+"code": 641,
+"name": "Medirigiriya"
+},
+{
+"code": 384,
+"name": "Meegahakiwula"
+},
+{
+"code": 728,
+"name": "Meegalewa"
+},
+{
+"code": 458,
+"name": "Meepilimana"
+},
+{
+"code": 555,
+"name": "Melsiripura"
+},
+{
+"code": 459,
+"name": "Menikhinna"
+},
+{
+"code": 618,
+"name": "Metropolitan"
+},
+{
+"code": 518,
+"name": "Middeniya"
+},
+{
+"code": 335,
+"name": "Mihintale"
+},
+{
+"code": 593,
+"name": "Milagiriya"
+},
+{
+"code": 394,
+"name": "Minneriya"
+},
+{
+"code": 545,
+"name": "Minuwangoda"
+},
+{
+"code": 88,
+"name": "Mirigama"
+},
+{
+"code": 417,
+"name": "Mollipothana"
+},
+{
+"code": 82,
+"name": "Monaragala"
+},
+{
+"code": 705,
+"name": "Moneragala Town"
+},
+{
+"code": 557,
+"name": "Moratumulla"
+},
+{
+"code": 61,
+"name": "Moratuwa"
+},
+{
+"code": 270,
+"name": "Morawaka"
+},
+{
+"code": 418,
+"name": "Morawewa"
+},
+{
+"code": 285,
+"name": "Morontota"
+},
+{
+"code": 766,
+"name": "Mount Lavinia"
+},
+{
+"code": 353,
+"name": "Mulankavil"
+},
+{
+"code": 355,
+"name": "Mullativu"
+},
+{
+"code": 723,
+"name": "Mulleriyawa New Town"
+},
+{
+"code": 511,
+"name": "Mulliyawalai"
+},
+{
+"code": 356,
+"name": "Murungan"
+},
+{
+"code": 118,
+"name": "Muttur"
+},
+{
+"code": 818,
+"name": "Nagoda"
+},
+{
+"code": 357,
+"name": "Nainativu"
+},
+{
+"code": 724,
+"name": "Naiwala"
+},
+{
+"code": 358,
+"name": "Nallur"
+},
+{
+"code": 359,
+"name": "Nanatan"
+},
+{
+"code": 762,
+"name": "Narahenpita"
+},
+{
+"code": 534,
+"name": "Narammala"
+},
+{
+"code": 552,
+"name": "National Institute Of Education"
+},
+{
+"code": 50,
+"name": "Nattandiya"
+},
+{
+"code": 92,
+"name": "Naula"
+},
+{
+"code": 419,
+"name": "Navithanvely"
+},
+{
+"code": 598,
+"name": "Nawalapitiya"
+},
+{
+"code": 360,
+"name": "Nedunkerny"
+},
+{
+"code": 18,
+"name": "Negombo"
+},
+{
+"code": 572,
+"name": "Negombo Bazzar"
+},
+{
+"code": 638,
+"name": "Nelliady"
+},
+{
+"code": 799,
+"name": "Nelundeniya"
+},
+{
+"code": 667,
+"name": "Neluwa"
+},
+{
+"code": 547,
+"name": "Nikaweratiya"
+},
+{
+"code": 420,
+"name": "Nilavely"
+},
+{
+"code": 591,
+"name": "Nintavur"
+},
+{
+"code": 675,
+"name": "Nittambuwa"
+},
+{
+"code": 597,
+"name": "Nivitigala"
+},
+{
+"code": 656,
+"name": "Nochchiyagama"
+},
+{
+"code": 779,
+"name": "Norchcholei"
+},
+{
+"code": 49,
+"name": "Nugegoda Supergrade"
+},
+{
+"code": 29,
+"name": "Nuwara Eliya"
+},
+{
+"code": 402,
+"name": "Oddamavady"
+},
+{
+"code": 361,
+"name": "Oddusudan"
+},
+{
+"code": 706,
+"name": "Okkampitiya"
+},
+{
+"code": 403,
+"name": "Oluwil"
+},
+{
+"code": 362,
+"name": "Omanthai"
+},
+{
+"code": 127,
+"name": "Padavi Parakramapura"
+},
+{
+"code": 395,
+"name": "Padaviya"
+},
+{
+"code": 492,
+"name": "Padiyapelella"
+},
+{
+"code": 348,
+"name": "Padiyatalawa"
+},
+{
+"code": 678,
+"name": "Padukka"
+},
+{
+"code": 461,
+"name": "Palapathwela"
+},
+{
+"code": 301,
+"name": "Palaviya"
+},
+{
+"code": 363,
+"name": "Pallai"
+},
+{
+"code": 302,
+"name": "Pallama"
+},
+{
+"code": 816,
+"name": "Pallebedda"
+},
+{
+"code": 464,
+"name": "Pallekelle"
+},
+{
+"code": 640,
+"name": "Pallepola"
+},
+{
+"code": 406,
+"name": "Palmuddai"
+},
+{
+"code": 404,
+"name": "Palugamam"
+},
+{
+"code": 7,
+"name": "Panadura"
+},
+{
+"code": 607,
+"name": "Panadura Bazaar"
+},
+{
+"code": 546,
+"name": "Pannala"
+},
+{
+"code": 303,
+"name": "Paragahadeniya"
+},
+{
+"code": 364,
+"name": "Paranthan"
+},
+{
+"code": 644,
+"name": "Parliamentary Complex"
+},
+{
+"code": 271,
+"name": "Pasgoda"
+},
+{
+"code": 503,
+"name": "Passara"
+},
+{
+"code": 690,
+"name": "Pelawatta"
+},
+{
+"code": 707,
+"name": "Pelawatta"
+},
+{
+"code": 541,
+"name": "Pelawatte City Kalutara"
+},
+{
+"code": 42,
+"name": "Peliyagoda"
+},
+{
+"code": 683,
+"name": "Pelmadulla"
+},
+{
+"code": 152,
+"name": "Pemaduwa"
+},
+{
+"code": 588,
+"name": "Peradeniya"
+},
+{
+"code": 681,
+"name": "Personal"
+},
+{
+"code": 344,
+"name": "Pesalai"
+},
+{
+"code": 4,
+"name": "Pettah"
+},
+{
+"code": 587,
+"name": "Pilimatalawa"
+},
+{
+"code": 736,
+"name": "Piliyandala"
+},
+{
+"code": 287,
+"name": "Pinnawala"
+},
+{
+"code": 272,
+"name": "Pitabeddara"
+},
+{
+"code": 533,
+"name": "Pitakotte"
+},
+{
+"code": 610,
+"name": "Pitigala"
+},
+{
+"code": 28,
+"name": "Point Pedro"
+},
+{
+"code": 526,
+"name": "Polgahawela"
+},
+{
+"code": 83,
+"name": "Polonnaruwa New Town"
+},
+{
+"code": 783,
+"name": "Polpithigama"
+},
+{
+"code": 405,
+"name": "Polwatte"
+},
+{
+"code": 345,
+"name": "Poonagary"
+},
+{
+"code": 346,
+"name": "Poovarasankulam"
+},
+{
+"code": 664,
+"name": "Pothuhera"
+},
+{
+"code": 318,
+"name": "Potuvil"
+},
+{
+"code": 99,
+"name": "Primary Dealer Unit"
+},
+{
+"code": 802,
+"name": "Provincial Council Complex, Pallakelle"
+},
+{
+"code": 765,
+"name": "Pugoda"
+},
+{
+"code": 441,
+"name": "Pujapitiya"
+},
+{
+"code": 425,
+"name": "Pundaluoya"
+},
+{
+"code": 347,
+"name": "Punnalaikadduvan"
+},
+{
+"code": 337,
+"name": "Pussellawa"
+},
+{
+"code": 341,
+"name": "Puthukudieruppu"
+},
+{
+"code": 342,
+"name": "Puthukulam"
+},
+{
+"code": 48,
+"name": "Puttalam"
+},
+{
+"code": 687,
+"name": "Raddolugama"
+},
+{
+"code": 442,
+"name": "Ragala"
+},
+{
+"code": 764,
+"name": "Ragama"
+},
+{
+"code": 746,
+"name": "Rajagiriya"
+},
+{
+"code": 396,
+"name": "Rajanganaya"
+},
+{
+"code": 397,
+"name": "Rajina Junction"
+},
+{
+"code": 594,
+"name": "Rakwana"
+},
+{
+"code": 782,
+"name": "Rambewa"
+},
+{
+"code": 582,
+"name": "Rambukkana"
+},
+{
+"code": 398,
+"name": "Ranajayapura"
+},
+{
+"code": 767,
+"name": "Ranna"
+},
+{
+"code": 259,
+"name": "Rathgama"
+},
+{
+"code": 689,
+"name": "Ratmalana"
+},
+{
+"code": 31,
+"name": "Ratnapura"
+},
+{
+"code": 684,
+"name": "Ratnapura Bazaar"
+},
+{
+"code": 315,
+"name": "Ratnapura Hospital"
+},
+{
+"code": 639,
+"name": "Rattota"
+},
+{
+"code": 627,
+"name": "Regent Street"
+},
+{
+"code": 532,
+"name": "Ridigama"
+},
+{
+"code": 167,
+"name": "Rikillagaskada"
+},
+{
+"code": 693,
+"name": "Ruhunu Campus"
+},
+{
+"code": 585,
+"name": "Ruwanwella"
+},
+{
+"code": 288,
+"name": "Sabaragamuwa Provincial Council"
+},
+{
+"code": 286,
+"name": "Sabaragamuwa University"
+},
+{
+"code": 407,
+"name": "Sainthamarathu"
+},
+{
+"code": 814,
+"name": "Saliyawewa"
+},
+{
+"code": 440,
+"name": "Samanthurai"
+},
+{
+"code": 338,
+"name": "Savalkaddu"
+},
+{
+"code": 421,
+"name": "Seeduwa"
+},
+{
+"code": 290,
+"name": "Seethawakapura"
+},
+{
+"code": 408,
+"name": "Serunuwara"
+},
+{
+"code": 399,
+"name": "Sevanapitiya"
+},
+{
+"code": 183,
+"name": "Sewagama"
+},
+{
+"code": 443,
+"name": "Sigiriya"
+},
+{
+"code": 339,
+"name": "Sirupiddy"
+},
+{
+"code": 416,
+"name": "Siyambalanduwa"
+},
+{
+"code": 520,
+"name": "Sri Jayawardenapura Hospital"
+},
+{
+"code": 751,
+"name": "Suriyawewa"
+},
+{
+"code": 650,
+"name": "Talatuoya"
+},
+{
+"code": 531,
+"name": "Talawakelle"
+},
+{
+"code": 596,
+"name": "Talgaswela"
+},
+{
+"code": 655,
+"name": "Tambuttegama"
+},
+{
+"code": 56,
+"name": "Tangalle"
+},
+{
+"code": 747,
+"name": "Taprobane"
+},
+{
+"code": 250,
+"name": "Tawalama"
+},
+{
+"code": 781,
+"name": "Teldeniya"
+},
+{
+"code": 336,
+"name": "Thalaimannar Pier"
+},
+{
+"code": 400,
+"name": "Thalawa"
+},
+{
+"code": 516,
+"name": "Thalawathugoda"
+},
+{
+"code": 798,
+"name": "Thalduwa"
+},
+{
+"code": 409,
+"name": "Thambiluvil"
+},
+{
+"code": 410,
+"name": "Thampalakamam"
+},
+{
+"code": 322,
+"name": "Thanamalwila"
+},
+{
+"code": 256,
+"name": "Thanthirimale"
+},
+{
+"code": 752,
+"name": "Thihagoda"
+},
+{
+"code": 512,
+"name": "Thimbirigasyaya"
+},
+{
+"code": 326,
+"name": "Thirumurukandi"
+},
+{
+"code": 761,
+"name": "Thirunelvely"
+},
+{
+"code": 305,
+"name": "Thoduwawa"
+},
+{
+"code": 411,
+"name": "Thoppur"
+},
+{
+"code": 157,
+"name": "Tirappane"
+},
+{
+"code": 538,
+"name": "Tissamaharama"
+},
+{
+"code": 760,
+"name": "Treasury Division"
+},
+{
+"code": 6,
+"name": "Trincomalee"
+},
+{
+"code": 624,
+"name": "Trincomalee Bazaar"
+},
+{
+"code": 606,
+"name": "Uda Dumbara"
+},
+{
+"code": 306,
+"name": "Udappuwa"
+},
+{
+"code": 291,
+"name": "Udawalawe"
+},
+{
+"code": 753,
+"name": "Udugama"
+},
+{
+"code": 413,
+"name": "Uhana"
+},
+{
+"code": 444,
+"name": "Ukuwela"
+},
+{
+"code": 43,
+"name": "Union Place"
+},
+{
+"code": 445,
+"name": "University Of Peradeniya"
+},
+{
+"code": 446,
+"name": "Upcott"
+},
+{
+"code": 414,
+"name": "Uppuvely"
+},
+{
+"code": 748,
+"name": "Uragasmanhandiya"
+},
+{
+"code": 298,
+"name": "Urubokka"
+},
+{
+"code": 794,
+"name": "Urumpirai"
+},
+{
+"code": 343,
+"name": "Uva Paranagama"
+},
+{
+"code": 804,
+"name": "Vaddukoddai"
+},
+{
+"code": 415,
+"name": "Vakarai"
+},
+{
+"code": 626,
+"name": "Valachchenai"
+},
+{
+"code": 791,
+"name": "Valvettithurai"
+},
+{
+"code": 385,
+"name": "Vavunathivu"
+},
+{
+"code": 44,
+"name": "Vavuniya"
+},
+{
+"code": 793,
+"name": "Vavuniya City"
+},
+{
+"code": 63,
+"name": "Velanai"
+},
+{
+"code": 386,
+"name": "Vellaveli"
+},
+{
+"code": 682,
+"name": "Veyangoda"
+},
+{
+"code": 775,
+"name": "Visakha"
+},
+{
+"code": 328,
+"name": "Visuvamadu"
+},
+{
+"code": 584,
+"name": "Wadduwa"
+},
+{
+"code": 815,
+"name": "Wahalkada"
+},
+{
+"code": 558,
+"name": "Waikkal"
+},
+{
+"code": 743,
+"name": "Walapane"
+},
+{
+"code": 517,
+"name": "Walasmulla"
+},
+{
+"code": 744,
+"name": "Walgama"
+},
+{
+"code": 800,
+"name": "Wanduramba"
+},
+{
+"code": 562,
+"name": "Warakapola"
+},
+{
+"code": 733,
+"name": "Warapitiya"
+},
+{
+"code": 685,
+"name": "Ward Place"
+},
+{
+"code": 379,
+"name": "Wariyapola"
+},
+{
+"code": 505,
+"name": "Wattala"
+},
+{
+"code": 340,
+"name": "Wattegama"
+},
+{
+"code": 307,
+"name": "Wayamba University"
+},
+{
+"code": 139,
+"name": "Weeraketiya"
+},
+{
+"code": 308,
+"name": "Weerapokuna"
+},
+{
+"code": 550,
+"name": "Weligama"
+},
+{
+"code": 292,
+"name": "Weligepola"
+},
+{
+"code": 817,
+"name": "Welikanda"
+},
+{
+"code": 730,
+"name": "Welimada"
+},
+{
+"code": 274,
+"name": "Weli-Oya"
+},
+{
+"code": 803,
+"name": "Welioya-Sampath Nuwara"
+},
+{
+"code": 527,
+"name": "Welisara"
+},
+{
+"code": 677,
+"name": "Weliweriya"
+},
+{
+"code": 309,
+"name": "Wellawa"
+},
+{
+"code": 23,
+"name": "Wellawatte"
+},
+{
+"code": 434,
+"name": "Wellawaya"
+},
+{
+"code": 104,
+"name": "Welpalla"
+},
+{
+"code": 508,
+"name": "Wennappuwa"
+},
+{
+"code": 499,
+"name": "Wijerama Junction"
+},
+{
+"code": 447,
+"name": "Wilgamuwa"
+},
+{
+"code": 769,
+"name": "Yakkala"
+},
+{
+"code": 578,
+"name": "Yakkalamulla"
+},
+{
+"code": 144,
+"name": "Yatawatte"
+},
+{
+"code": 477,
+"name": "Yatiyantota"
+}
+]
+},
+{
+"id": 2,
+"name": "Amana Bank PLC",
+"bankCode": 7463,
+"type": "commercial",
+"swift": "AMABKLCO",
+"phone": "+94 11 775 6756",
+"address": "486, Galle Road, Colombo 03",
+"email": "info@amanabank.lk",
+"website": "https://www.amanabank.lk",
+"branches": [
+{
+"code": 15,
+"name": "Akkaraipattu"
+},
+{
+"code": 10,
+"name": "Akurana"
+},
+{
+"code": 21,
+"name": "Badulla"
+},
+{
+"code": 16,
+"name": "Dehiwela"
+},
+{
+"code": 28,
+"name": "Dematagoda"
+},
+{
+"code": 19,
+"name": "Eravur"
+},
+{
+"code": 8,
+"name": "Galle"
+},
+{
+"code": 11,
+"name": "Gampola"
+},
+{
+"code": 1,
+"name": "Head Office"
+},
+{
+"code": 22,
+"name": "Kaduruwela"
+},
+{
+"code": 6,
+"name": "Kalmunai"
+},
+{
+"code": 26,
+"name": "Kalmunai Unity Square"
+},
+{
+"code": 3,
+"name": "Kandy"
+},
+{
+"code": 4,
+"name": "Kattankudy"
+},
+{
+"code": 24,
+"name": "Kinniya"
+},
+{
+"code": 29,
+"name": "Kirulapana"
+},
+{
+"code": 18,
+"name": "Kuliyapitiya"
+},
+{
+"code": 14,
+"name": "Kurunegala"
+},
+{
+"code": 5,
+"name": "Ladies"
+},
+{
+"code": 13,
+"name": "Mawanella"
+},
+{
+"code": 20,
+"name": "Negombo"
+},
+{
+"code": 17,
+"name": "Nintavur"
+},
+{
+"code": 9,
+"name": "Oddamavadi"
+},
+{
+"code": 27,
+"name": "Old Moor Street"
+},
+{
+"code": 2,
+"name": "Pettah"
+},
+{
+"code": 23,
+"name": "Puttalam"
+},
+{
+"code": 25,
+"name": "Ratnapura"
+},
+{
+"code": 12,
+"name": "Sammanthurai"
+}
+]
+},
+{
+"id": 3,
+"name": "Cargills Bank PLC",
+"bankCode": 7481,
+"type": "commercial",
+"swift": "CRGLKLCO",
+"phone": "+94 11 7640000",
+"address": "Colombo 03",
+"email": "",
+"website": "https://www.cargillsbank.com",
+"branches": [
+{
+"code": 925,
+"name": "Central Processing Office"
+},
+{
+"code": 11,
+"name": "Chunnakkam"
+},
+{
+"code": 1,
+"name": "Corporate"
+},
+{
+"code": 12,
+"name": "Galle"
+},
+{
+"code": 7,
+"name": "Hawaeliya"
+},
+{
+"code": 10,
+"name": "Jaffna City Center"
+},
+{
+"code": 14,
+"name": "Kandy"
+},
+{
+"code": 9,
+"name": "Kurunegala"
+},
+{
+"code": 5,
+"name": "Maharagama"
+},
+{
+"code": 2,
+"name": "Maitland Crescent"
+},
+{
+"code": 4,
+"name": "Matara"
+},
+{
+"code": 13,
+"name": "Nuwara Eliya"
+},
+{
+"code": 3,
+"name": "Old Moor Street"
+},
+{
+"code": 15,
+"name": "Peradeniya"
+},
+{
+"code": 8,
+"name": "Thanamalwila"
+},
+{
+"code": 6,
+"name": "Vavuniya"
+}
+]
+},
+{
+"id": 4,
+"name": "Commercial Bank of Ceylon PLC",
+"bankCode": 7056,
+"type": "commercial",
+"swift": "CCEYLKLX",
+"phone": "+94 11 2353353",
+"address": "21, Sir Razik Fareed Mawatha, Colombo 01",
+"email": "online@combank.lk",
+"website": "https://www.combank.lk",
+"branches": [
+{
+"code": 172,
+"name": "Akkaraipattu"
+},
+{
+"code": 219,
+"name": "Akurana Service Point"
+},
+{
+"code": 35,
+"name": "Akuressa"
+},
+{
+"code": 188,
+"name": "Alawwa"
+},
+{
+"code": 40,
+"name": "Aluthgama"
+},
+{
+"code": 97,
+"name": "Ambalangoda"
+},
+{
+"code": 63,
+"name": "Ambalantota"
+},
+{
+"code": 100,
+"name": "Ampara"
+},
+{
+"code": 254,
+"name": "Anniwatte CSP"
+},
+{
+"code": 53,
+"name": "Anuradhapura"
+},
+{
+"code": 185,
+"name": "Anuradhapura New Town"
+},
+{
+"code": 156,
+"name": "Atchchuvely"
+},
+{
+"code": 130,
+"name": "Athurugiriya"
+},
+{
+"code": 231,
+"name": "Attidiya"
+},
+{
+"code": 70,
+"name": "Avissawella"
+},
+{
+"code": 98,
+"name": "Baddegama"
+},
+{
+"code": 52,
+"name": "Badulla"
+},
+{
+"code": 244,
+"name": "Badulla Minicom"
+},
+{
+"code": 82,
+"name": "Balangoda"
+},
+{
+"code": 106,
+"name": "Bambalapitiya"
+},
+{
+"code": 84,
+"name": "Bandaragama (C.S.P.)"
+},
+{
+"code": 247,
+"name": "Bandarawatta (Laugfs Super)"
+},
+{
+"code": 80,
+"name": "Bandarawela"
+},
+{
+"code": 113,
+"name": "Baseline"
+},
+{
+"code": 240,
+"name": "Batapola"
+},
+{
+"code": 252,
+"name": "Batharamulla Arpico Super Centre"
+},
+{
+"code": 29,
+"name": "Battaramulla"
+},
+{
+"code": 105,
+"name": "Batticaloa"
+},
+{
+"code": 242,
+"name": "Batticaloa Minicom"
+},
+{
+"code": 181,
+"name": "Beliatta"
+},
+{
+"code": 220,
+"name": "Beruwala CSP"
+},
+{
+"code": 249,
+"name": "BIA Counter"
+},
+{
+"code": 147,
+"name": "Biyagama"
+},
+{
+"code": 226,
+"name": "Bokundara CSP"
+},
+{
+"code": 142,
+"name": "Boralesgamuwa"
+},
+{
+"code": 132,
+"name": "Boralesgamuwa CSP"
+},
+{
+"code": 19,
+"name": "Borella"
+},
+{
+"code": 95,
+"name": "Card Centre"
+},
+{
+"code": 239,
+"name": "Chankanai"
+},
+{
+"code": 126,
+"name": "Chavakachcheri"
+},
+{
+"code": 168,
+"name": "Chenkalady"
+},
+{
+"code": 43,
+"name": "Chilaw"
+},
+{
+"code": 107,
+"name": "Chunakkam"
+},
+{
+"code": 2,
+"name": "City Office"
+},
+{
+"code": 50,
+"name": "Colombo 07"
+},
+{
+"code": 237,
+"name": "Colombo Gold Centre"
+},
+{
+"code": 54,
+"name": "Dambulla"
+},
+{
+"code": 164,
+"name": "Dankotuwa"
+},
+{
+"code": 58,
+"name": "Dehiwala"
+},
+{
+"code": 251,
+"name": "Dehiwala Arpico Super Centre"
+},
+{
+"code": 276,
+"name": "Deiyandara"
+},
+{
+"code": 269,
+"name": "Delgoda Laugfs Super"
+},
+{
+"code": 134,
+"name": "Delkanda"
+},
+{
+"code": 111,
+"name": "Deniyaya"
+},
+{
+"code": 140,
+"name": "Digana"
+},
+{
+"code": 180,
+"name": "Divulapitiya"
+},
+{
+"code": 68,
+"name": "Duplication Road"
+},
+{
+"code": 158,
+"name": "Eheliyagoda"
+},
+{
+"code": 71,
+"name": "Ekala  (CSP)"
+},
+{
+"code": 103,
+"name": "Elpitiya"
+},
+{
+"code": 30,
+"name": "Embilipitiya"
+},
+{
+"code": 3,
+"name": "Foreign"
+},
+{
+"code": 9,
+"name": "Galewela"
+},
+{
+"code": 27,
+"name": "Galle City"
+},
+{
+"code": 271,
+"name": "Galle City Minicom"
+},
+{
+"code": 5,
+"name": "Galle Fort"
+},
+{
+"code": 44,
+"name": "Gampaha"
+},
+{
+"code": 218,
+"name": "Gampaha CSP"
+},
+{
+"code": 102,
+"name": "Gampola"
+},
+{
+"code": 177,
+"name": "Ganemulla"
+},
+{
+"code": 265,
+"name": "Gelioya Service Point"
+},
+{
+"code": 182,
+"name": "Giriulla"
+},
+{
+"code": 197,
+"name": "Godakawela CSP"
+},
+{
+"code": 57,
+"name": "Grandpass"
+},
+{
+"code": 166,
+"name": "Hambantota"
+},
+{
+"code": 143,
+"name": "Hanwella"
+},
+{
+"code": 115,
+"name": "Hatton"
+},
+{
+"code": 0,
+"name": "Head Office"
+},
+{
+"code": 1,
+"name": "Head Office"
+},
+{
+"code": 999,
+"name": "Head Office"
+},
+{
+"code": 264,
+"name": "Hendala Service Point"
+},
+{
+"code": 14,
+"name": "Hikkaduwa"
+},
+{
+"code": 15,
+"name": "Hingurakgoda"
+},
+{
+"code": 258,
+"name": "Holiday Banking Centre – Majestic City"
+},
+{
+"code": 75,
+"name": "Homagama"
+},
+{
+"code": 76,
+"name": "Horana"
+},
+{
+"code": 224,
+"name": "Horana Service Point"
+},
+{
+"code": 232,
+"name": "Hulftsdorp"
+},
+{
+"code": 253,
+"name": "Hydepark Arpico Service Center"
+},
+{
+"code": 901,
+"name": "Islamic Banking Unit"
+},
+{
+"code": 230,
+"name": "Ja – Ela (K-Zone)"
+},
+{
+"code": 81,
+"name": "Ja-Ela"
+},
+{
+"code": 6,
+"name": "Jaffna"
+},
+{
+"code": 67,
+"name": "Kadawatha"
+},
+{
+"code": 234,
+"name": "Kadawatha (Arpico Super)"
+},
+{
+"code": 88,
+"name": "Kaduruwela"
+},
+{
+"code": 42,
+"name": "Kaduwela"
+},
+{
+"code": 133,
+"name": "Kahawatta"
+},
+{
+"code": 138,
+"name": "Kalawana"
+},
+{
+"code": 152,
+"name": "Kalmunai"
+},
+{
+"code": 36,
+"name": "Kalutara"
+},
+{
+"code": 267,
+"name": "Kalutara (Arpico Super)"
+},
+{
+"code": 104,
+"name": "Kamburupitiya"
+},
+{
+"code": 31,
+"name": "Kandana"
+},
+{
+"code": 4,
+"name": "Kandy"
+},
+{
+"code": 150,
+"name": "Kandy City office"
+},
+{
+"code": 135,
+"name": "karapitiya"
+},
+{
+"code": 173,
+"name": "Kataragama"
+},
+{
+"code": 193,
+"name": "Kattankudy"
+},
+{
+"code": 114,
+"name": "Katubedda"
+},
+{
+"code": 167,
+"name": "Katubedda CSP"
+},
+{
+"code": 45,
+"name": "Katugastota"
+},
+{
+"code": 245,
+"name": "Katugastota (Minicom)"
+},
+{
+"code": 227,
+"name": "Katukurunda CSP"
+},
+{
+"code": 190,
+"name": "Katunayake 24/7 Centre"
+},
+{
+"code": 25,
+"name": "Katunayake FTZ"
+},
+{
+"code": 21,
+"name": "Kegalle"
+},
+{
+"code": 110,
+"name": "Kekirawa"
+},
+{
+"code": 39,
+"name": "Keyzer Street"
+},
+{
+"code": 155,
+"name": "Kilinochchi"
+},
+{
+"code": 272,
+"name": "Kilinochchi Minicom"
+},
+{
+"code": 69,
+"name": "Kiribathgoda"
+},
+{
+"code": 257,
+"name": "Kiribathgoda Service Point"
+},
+{
+"code": 139,
+"name": "Kirindiwela"
+},
+{
+"code": 47,
+"name": "Kirulapona"
+},
+{
+"code": 217,
+"name": "Kirulapone Minicom"
+},
+{
+"code": 74,
+"name": "Kochchikade"
+},
+{
+"code": 198,
+"name": "Kodikamam"
+},
+{
+"code": 28,
+"name": "Koggala"
+},
+{
+"code": 87,
+"name": "Kohuwala"
+},
+{
+"code": 266,
+"name": "Kohuwala Service Point"
+},
+{
+"code": 11,
+"name": "Kollupitiya"
+},
+{
+"code": 12,
+"name": "Kotahena"
+},
+{
+"code": 119,
+"name": "Kotikawatta"
+},
+{
+"code": 121,
+"name": "Kottawa"
+},
+{
+"code": 51,
+"name": "Kuliyapitiya"
+},
+{
+"code": 255,
+"name": "Kundasale (Dumbara Super CSP)"
+},
+{
+"code": 16,
+"name": "Kurunegala"
+},
+{
+"code": 122,
+"name": "Kurunegala City Office"
+},
+{
+"code": 212,
+"name": "Kurunegala Service Point"
+},
+{
+"code": 175,
+"name": "Kuruwita"
+},
+{
+"code": 196,
+"name": "Liberty Plaza CSP"
+},
+{
+"code": 18,
+"name": "Maharagama"
+},
+{
+"code": 209,
+"name": "Maharagama Minicom"
+},
+{
+"code": 137,
+"name": "Mahiyanganaya"
+},
+{
+"code": 199,
+"name": "Makola"
+},
+{
+"code": 86,
+"name": "Malabe (C.S.P.)"
+},
+{
+"code": 153,
+"name": "Manipay"
+},
+{
+"code": 154,
+"name": "Mannar"
+},
+{
+"code": 32,
+"name": "Maradana"
+},
+{
+"code": 183,
+"name": "Marawila"
+},
+{
+"code": 195,
+"name": "Maskeliya"
+},
+{
+"code": 8,
+"name": "Matale"
+},
+{
+"code": 7,
+"name": "Matara"
+},
+{
+"code": 151,
+"name": "Matara City office"
+},
+{
+"code": 222,
+"name": "Matara Minicom Centre"
+},
+{
+"code": 96,
+"name": "Mathugama"
+},
+{
+"code": 268,
+"name": "Mattegoda (Laugfs Super)"
+},
+{
+"code": 79,
+"name": "Mawanella"
+},
+{
+"code": 161,
+"name": "Mawathagama"
+},
+{
+"code": 200,
+"name": "Medawachchiya"
+},
+{
+"code": 176,
+"name": "Middeniya"
+},
+{
+"code": 33,
+"name": "Minuwangoda"
+},
+{
+"code": 66,
+"name": "Mirigama"
+},
+{
+"code": 120,
+"name": "Monaragala"
+},
+{
+"code": 59,
+"name": "Moratuwa"
+},
+{
+"code": 210,
+"name": "Moratuwa Minicom"
+},
+{
+"code": 277,
+"name": "Morawaka"
+},
+{
+"code": 93,
+"name": "Mount Lavinia(C.S.P.)"
+},
+{
+"code": 229,
+"name": "Mulliyawalai"
+},
+{
+"code": 23,
+"name": "Mutuwal"
+},
+{
+"code": 22,
+"name": "Narahenpita"
+},
+{
+"code": 60,
+"name": "Narammala"
+},
+{
+"code": 55,
+"name": "Nattandiya"
+},
+{
+"code": 101,
+"name": "Nawala  (C.S.P.)"
+},
+{
+"code": 208,
+"name": "Nawala Service Point"
+},
+{
+"code": 89,
+"name": "Nawalapitiya"
+},
+{
+"code": 259,
+"name": "Nawam Mawatha"
+},
+{
+"code": 238,
+"name": "Nawinna (Arpico Super)"
+},
+{
+"code": 256,
+"name": "Negambo Arpico Super Centre"
+},
+{
+"code": 13,
+"name": "Negombo"
+},
+{
+"code": 118,
+"name": "Negombo Extension Office"
+},
+{
+"code": 108,
+"name": "Nelliady"
+},
+{
+"code": 125,
+"name": "Neluwa"
+},
+{
+"code": 83,
+"name": "Nikaweratiya"
+},
+{
+"code": 65,
+"name": "Nittambuwa"
+},
+{
+"code": 261,
+"name": "Nittambuwa CSP"
+},
+{
+"code": 241,
+"name": "Nochchiyagama"
+},
+{
+"code": 20,
+"name": "Nugegoda"
+},
+{
+"code": 34,
+"name": "Nuwara Eliya"
+},
+{
+"code": 17,
+"name": "Old Moor Street"
+},
+{
+"code": 270,
+"name": "Orion City ABC"
+},
+{
+"code": 187,
+"name": "Padukka"
+},
+{
+"code": 206,
+"name": "Palavi"
+},
+{
+"code": 41,
+"name": "Panadura"
+},
+{
+"code": 223,
+"name": "Panadura CSP"
+},
+{
+"code": 189,
+"name": "Panadura Second"
+},
+{
+"code": 38,
+"name": "Panchikawatte"
+},
+{
+"code": 144,
+"name": "Pannala"
+},
+{
+"code": 186,
+"name": "Passara"
+},
+{
+"code": 262,
+"name": "Pelawatte CSP"
+},
+{
+"code": 165,
+"name": "Peliyagoda CSP"
+},
+{
+"code": 149,
+"name": "Pelmadulla"
+},
+{
+"code": 73,
+"name": "Peradeniya  (CSP)"
+},
+{
+"code": 24,
+"name": "Pettah"
+},
+{
+"code": 72,
+"name": "Pettah Main Street"
+},
+{
+"code": 109,
+"name": "Pilimathalawa"
+},
+{
+"code": 77,
+"name": "Piliyandala"
+},
+{
+"code": 117,
+"name": "Pitakotte CSP"
+},
+{
+"code": 141,
+"name": "Polgahawela"
+},
+{
+"code": 194,
+"name": "Pottuvil"
+},
+{
+"code": 169,
+"name": "Priority Banking Centre"
+},
+{
+"code": 148,
+"name": "Puttlam"
+},
+{
+"code": 131,
+"name": "Raddolugama"
+},
+{
+"code": 221,
+"name": "Ragama"
+},
+{
+"code": 62,
+"name": "Rajagiriya"
+},
+{
+"code": 233,
+"name": "Rajagiriya (Keells Super)"
+},
+{
+"code": 216,
+"name": "Ramanayake Mawatha"
+},
+{
+"code": 46,
+"name": "Ratmalana"
+},
+{
+"code": 49,
+"name": "Ratnapura"
+},
+{
+"code": 213,
+"name": "Ratnapura (Laugfs Super)"
+},
+{
+"code": 116,
+"name": "Reid Avenue"
+},
+{
+"code": 163,
+"name": "Ruwanwella"
+},
+{
+"code": 64,
+"name": "Seeduwa"
+},
+{
+"code": 204,
+"name": "SLIC- CSP"
+},
+{
+"code": 127,
+"name": "Stanley Road, Jaffna"
+},
+{
+"code": 123,
+"name": "Tangalle"
+},
+{
+"code": 184,
+"name": "Thalawakelle"
+},
+{
+"code": 78,
+"name": "Thalawathugoda (C.S.P.)"
+},
+{
+"code": 162,
+"name": "Thambuttegama"
+},
+{
+"code": 157,
+"name": "Thirunelvely"
+},
+{
+"code": 124,
+"name": "Tissamaharama"
+},
+{
+"code": 37,
+"name": "Trincomalee"
+},
+{
+"code": 129,
+"name": "Udugama"
+},
+{
+"code": 48,
+"name": "Union Place"
+},
+{
+"code": 211,
+"name": "Union Place (Keells Super) Branch"
+},
+{
+"code": 236,
+"name": "Urubokka"
+},
+{
+"code": 159,
+"name": "Valachchenai"
+},
+{
+"code": 61,
+"name": "Vavuniya"
+},
+{
+"code": 171,
+"name": "Vavuniya Extension Office"
+},
+{
+"code": 170,
+"name": "Velanai"
+},
+{
+"code": 250,
+"name": "Veyangoda"
+},
+{
+"code": 146,
+"name": "Wadduwa"
+},
+{
+"code": 128,
+"name": "Warakapola"
+},
+{
+"code": 145,
+"name": "Ward Place"
+},
+{
+"code": 174,
+"name": "Wariyapola"
+},
+{
+"code": 56,
+"name": "Wattala"
+},
+{
+"code": 260,
+"name": "Wattala Arpico Super Center"
+},
+{
+"code": 225,
+"name": "Wattala Minicom"
+},
+{
+"code": 246,
+"name": "Wattgama"
+},
+{
+"code": 112,
+"name": "Weligama"
+},
+{
+"code": 136,
+"name": "Welimada"
+},
+{
+"code": 228,
+"name": "Weliweria"
+},
+{
+"code": 10,
+"name": "Wellawatte"
+},
+{
+"code": 179,
+"name": "Wellawatte 2nd"
+},
+{
+"code": 160,
+"name": "Wellawaya"
+},
+{
+"code": 26,
+"name": "Wennappuwa"
+},
+{
+"code": 248,
+"name": "Wennapuwa (Arpico) Super"
+},
+{
+"code": 178,
+"name": "World Trade Centre"
+},
+{
+"code": 85,
+"name": "Yakkala"
+}
+]
+},
+{
+"id": 5,
+"name": "Citizen Development Business Finance PLC (CDB)",
+"bankCode": 7746,
+"type": "commercial",
+"swift": "CDBFKLCO",
+"phone": "+94 11 7545454",
+"address": "Colombo 03",
+"email": "info@cdb.lk",
+"website": "https://www.cdb.lk",
+"branches": [
+{
+"code": 69,
+"name": "Aluthgama"
+},
+{
+"code": 57,
+"name": "Ambalangoda"
+},
+{
+"code": 11,
+"name": "Anuradhapura"
+},
+{
+"code": 65,
+"name": "Avissawella"
+},
+{
+"code": 9,
+"name": "Badulla"
+},
+{
+"code": 36,
+"name": "Bandarawela"
+},
+{
+"code": 24,
+"name": "Battaramulla"
+},
+{
+"code": 34,
+"name": "Batticaloa"
+},
+{
+"code": 43,
+"name": "Boralesgamuwa"
+},
+{
+"code": 10,
+"name": "Chilaw"
+},
+{
+"code": 31,
+"name": "Colombo Office"
+},
+{
+"code": 28,
+"name": "Dambulla"
+},
+{
+"code": 60,
+"name": "Dehiwala"
+},
+{
+"code": 42,
+"name": "Eheliyagoda"
+},
+{
+"code": 41,
+"name": "Ela Kanda"
+},
+{
+"code": 23,
+"name": "Embilipitiya"
+},
+{
+"code": 27,
+"name": "Galle"
+},
+{
+"code": 7,
+"name": "Gampaha"
+},
+{
+"code": 72,
+"name": "Giriulla"
+},
+{
+"code": 38,
+"name": "Head Office"
+},
+{
+"code": 50,
+"name": "Horana"
+},
+{
+"code": 14,
+"name": "Ja-Ela"
+},
+{
+"code": 32,
+"name": "Jaffna"
+},
+{
+"code": 39,
+"name": "Kadana"
+},
+{
+"code": 29,
+"name": "Kaduruwela"
+},
+{
+"code": 15,
+"name": "Kaduwela"
+},
+{
+"code": 20,
+"name": "Kaluthara"
+},
+{
+"code": 6,
+"name": "Kandy"
+},
+{
+"code": 54,
+"name": "Katugasthota"
+},
+{
+"code": 16,
+"name": "Kegalle"
+},
+{
+"code": 5,
+"name": "Kelaniya"
+},
+{
+"code": 52,
+"name": "Kochchikade"
+},
+{
+"code": 30,
+"name": "Kotahena"
+},
+{
+"code": 62,
+"name": "Kottawa"
+},
+{
+"code": 45,
+"name": "Kuliyapitiya"
+},
+{
+"code": 4,
+"name": "Kurunegala"
+},
+{
+"code": 68,
+"name": "Kuruvita"
+},
+{
+"code": 26,
+"name": "Mahara"
+},
+{
+"code": 21,
+"name": "Maharagama"
+},
+{
+"code": 70,
+"name": "Mahiyanganaya"
+},
+{
+"code": 58,
+"name": "Malabe"
+},
+{
+"code": 44,
+"name": "Marawila"
+},
+{
+"code": 55,
+"name": "Matale"
+},
+{
+"code": 22,
+"name": "Matara"
+},
+{
+"code": 19,
+"name": "Mathugama"
+},
+{
+"code": 64,
+"name": "Mawathagama"
+},
+{
+"code": 59,
+"name": "Minuwangoda"
+},
+{
+"code": 2,
+"name": "Moratuwa"
+},
+{
+"code": 63,
+"name": "Narammala"
+},
+{
+"code": 3,
+"name": "Negombo"
+},
+{
+"code": 67,
+"name": "Nikaweratiya"
+},
+{
+"code": 17,
+"name": "Nittambuwa"
+},
+{
+"code": 48,
+"name": "Nugegoda"
+},
+{
+"code": 47,
+"name": "Panadura"
+},
+{
+"code": 51,
+"name": "Pelmadulla"
+},
+{
+"code": 56,
+"name": "Piliyandala"
+},
+{
+"code": 49,
+"name": "Premier Center"
+},
+{
+"code": 40,
+"name": "Ragama"
+},
+{
+"code": 53,
+"name": "Rajagiriya"
+},
+{
+"code": 8,
+"name": "Rathnapura"
+},
+{
+"code": 46,
+"name": "Ratmalana"
+},
+{
+"code": 71,
+"name": "Thalawathugoda"
+},
+{
+"code": 25,
+"name": "Tissamaharama"
+},
+{
+"code": 35,
+"name": "Trincomalee"
+},
+{
+"code": 33,
+"name": "Vavuniya"
+},
+{
+"code": 61,
+"name": "Warakapola"
+},
+{
+"code": 66,
+"name": "Wariyapola"
+},
+{
+"code": 13,
+"name": "Wattala"
+},
+{
+"code": 12,
+"name": "Wellawatta"
+},
+{
+"code": 18,
+"name": "Wennappuwa"
+}
+]
+},
+{
+"id": 6,
+"name": "DFCC Bank PLC",
+"bankCode": 7454,
+"type": "commercial",
+"swift": "DFCCKLCO",
+"phone": "+94 11 2448448",
+"address": "73/5, Galle Road, Colombo 03",
+"email": "info@dfccbank.com",
+"website": "https://www.dfcc.lk",
+"branches": [
+{
+"code": 58,
+"name": "Akkaraipattu"
+},
+{
+"code": 54,
+"name": "Akuressa"
+},
+{
+"code": 38,
+"name": "Ambalangoda"
+},
+{
+"code": 41,
+"name": "Ampara"
+},
+{
+"code": 9,
+"name": "Anuradhapura"
+},
+{
+"code": 85,
+"name": "Aralaganwila"
+},
+{
+"code": 39,
+"name": "Avissawella"
+},
+{
+"code": 11,
+"name": "Badulla"
+},
+{
+"code": 80,
+"name": "Balangoda"
+},
+{
+"code": 81,
+"name": "Bandaragama"
+},
+{
+"code": 15,
+"name": "Bandaranayake Mawatha"
+},
+{
+"code": 17,
+"name": "Bandarawela"
+},
+{
+"code": 40,
+"name": "Batticaloa"
+},
+{
+"code": 12,
+"name": "Borella"
+},
+{
+"code": 800,
+"name": "Central Operations"
+},
+{
+"code": 531,
+"name": "Central Province SLP Units"
+},
+{
+"code": 32,
+"name": "Chilaw"
+},
+{
+"code": 59,
+"name": "Chunnakam"
+},
+{
+"code": 7,
+"name": "City Office"
+},
+{
+"code": 20,
+"name": "Dambulla"
+},
+{
+"code": 94,
+"name": "Dankotuwa"
+},
+{
+"code": 84,
+"name": "Dehiattakandiya"
+},
+{
+"code": 25,
+"name": "Deniyaya"
+},
+{
+"code": 65,
+"name": "Digana"
+},
+{
+"code": 561,
+"name": "Eastern  Province SLP Units"
+},
+{
+"code": 68,
+"name": "Eheliyagoda"
+},
+{
+"code": 53,
+"name": "Elpitiya"
+},
+{
+"code": 45,
+"name": "Embilipitiya"
+},
+{
+"code": 67,
+"name": "Galewela"
+},
+{
+"code": 35,
+"name": "Galle"
+},
+{
+"code": 10,
+"name": "Gampaha"
+},
+{
+"code": 30,
+"name": "Gampola"
+},
+{
+"code": 76,
+"name": "Gangodawila"
+},
+{
+"code": 90,
+"name": "Giriulla"
+},
+{
+"code": 62,
+"name": "Hambantota"
+},
+{
+"code": 73,
+"name": "Hatton"
+},
+{
+"code": 1,
+"name": "Head Office"
+},
+{
+"code": 999,
+"name": "Head Office"
+},
+{
+"code": 92,
+"name": "Hikkaduwa"
+},
+{
+"code": 79,
+"name": "Hingurakgoda"
+},
+{
+"code": 34,
+"name": "Horana"
+},
+{
+"code": 75,
+"name": "Ibbagamuwa"
+},
+{
+"code": 63,
+"name": "Ja Ela"
+},
+{
+"code": 42,
+"name": "Jaffna"
+},
+{
+"code": 29,
+"name": "Kadawatha"
+},
+{
+"code": 14,
+"name": "Kaduruwela"
+},
+{
+"code": 78,
+"name": "Kaduwela"
+},
+{
+"code": 88,
+"name": "Kahawatta"
+},
+{
+"code": 37,
+"name": "Kalawana"
+},
+{
+"code": 26,
+"name": "Kaluthara"
+},
+{
+"code": 83,
+"name": "Kandy City Centre"
+},
+{
+"code": 55,
+"name": "Kattankudy"
+},
+{
+"code": 6,
+"name": "Katugastota"
+},
+{
+"code": 48,
+"name": "Katugastota"
+},
+{
+"code": 49,
+"name": "Kegalle"
+},
+{
+"code": 52,
+"name": "Kilinochchi"
+},
+{
+"code": 27,
+"name": "Kiribathgoda"
+},
+{
+"code": 89,
+"name": "Kochchikade"
+},
+{
+"code": 64,
+"name": "Kotahena"
+},
+{
+"code": 19,
+"name": "Kottawa"
+},
+{
+"code": 22,
+"name": "Kuliyapitiya"
+},
+{
+"code": 5,
+"name": "Kurunegala"
+},
+{
+"code": 16,
+"name": "Maharagama"
+},
+{
+"code": 3,
+"name": "Malabe"
+},
+{
+"code": 60,
+"name": "Manipai"
+},
+{
+"code": 31,
+"name": "Matale"
+},
+{
+"code": 4,
+"name": "Matara"
+},
+{
+"code": 69,
+"name": "Mathugama"
+},
+{
+"code": 86,
+"name": "Medirigiriya"
+},
+{
+"code": 50,
+"name": "Monaragala"
+},
+{
+"code": 43,
+"name": "Moratuwa"
+},
+{
+"code": 72,
+"name": "Mount Lavinia"
+},
+{
+"code": 70,
+"name": "Narammala"
+},
+{
+"code": 28,
+"name": "Nawala"
+},
+{
+"code": 93,
+"name": "Nawalapitiya"
+},
+{
+"code": 18,
+"name": "Negombo"
+},
+{
+"code": 61,
+"name": "Nelliady"
+},
+{
+"code": 71,
+"name": "Nikaweratiya"
+},
+{
+"code": 551,
+"name": "North Central  Province SLP Units"
+},
+{
+"code": 521,
+"name": "North Western Province SLP Units"
+},
+{
+"code": 2,
+"name": "Nugegoda"
+},
+{
+"code": 36,
+"name": "Nuwara Eliya"
+},
+{
+"code": 57,
+"name": "Oddamavadi"
+},
+{
+"code": 23,
+"name": "Panadura"
+},
+{
+"code": 82,
+"name": "Peradeniya"
+},
+{
+"code": 46,
+"name": "Pettah Peoples Park"
+},
+{
+"code": 87,
+"name": "Pettah-Main Street"
+},
+{
+"code": 24,
+"name": "Piliyandala"
+},
+{
+"code": 700,
+"name": "Premier Banking Centre"
+},
+{
+"code": 8,
+"name": "Rathnapura"
+},
+{
+"code": 541,
+"name": "Sabaragamuwa Province SLP Units"
+},
+{
+"code": 51,
+"name": "Sainthamaruthu"
+},
+{
+"code": 501,
+"name": "Southern Province SLP Units"
+},
+{
+"code": 56,
+"name": "Tangalle"
+},
+{
+"code": 66,
+"name": "Thambuttegama"
+},
+{
+"code": 44,
+"name": "Trincomalee"
+},
+{
+"code": 571,
+"name": "Uva Province SLP Units"
+},
+{
+"code": 47,
+"name": "Vavuniya"
+},
+{
+"code": 21,
+"name": "Wattala"
+},
+{
+"code": 77,
+"name": "Weligama"
+},
+{
+"code": 74,
+"name": "Welimada"
+},
+{
+"code": 33,
+"name": "Wellawatte"
+},
+{
+"code": 91,
+"name": "Wennappuwa"
+},
+{
+"code": 511,
+"name": "Western  Province SLP Units"
+}
+]
+},
+{
+"id": 7,
+"name": "National Development Bank PLC (NDB)",
+"bankCode": 7214,
+"type": "commercial",
+"swift": "NDBLKLCO",
+"phone": "+94 11 2448448",
+"address": "Nawam Mawatha, Colombo 02",
+"email": "connect@ndbbank.com",
+"website": "https://www.ndbbank.com",
+"branches": [
+{
+"code": 94,
+"name": "Akkaraipattu"
+},
+{
+"code": 65,
+"name": "Akuressa"
+},
+{
+"code": 59,
+"name": "Aluthgama"
+},
+{
+"code": 47,
+"name": "Ambalangoda"
+},
+{
+"code": 48,
+"name": "Ambalantota"
+},
+{
+"code": 40,
+"name": "Ampara"
+},
+{
+"code": 19,
+"name": "Anuradhapura"
+},
+{
+"code": 71,
+"name": "Athurugiriya"
+},
+{
+"code": 34,
+"name": "Awissawella"
+},
+{
+"code": 18,
+"name": "Badulla"
+},
+{
+"code": 77,
+"name": "Balangoda"
+},
+{
+"code": 51,
+"name": "Bandarawela"
+},
+{
+"code": 90,
+"name": "Battaramulla"
+},
+{
+"code": 39,
+"name": "Batticaloa"
+},
+{
+"code": 72,
+"name": "Boralesgamuwa"
+},
+{
+"code": 52,
+"name": "Borella"
+},
+{
+"code": 99,
+"name": "Chavakachcheri"
+},
+{
+"code": 93,
+"name": "Chenkalady"
+},
+{
+"code": 10,
+"name": "Chilaw"
+},
+{
+"code": 62,
+"name": "Chunnakam"
+},
+{
+"code": 64,
+"name": "Dambulla"
+},
+{
+"code": 78,
+"name": "Eheliyagoda"
+},
+{
+"code": 67,
+"name": "Elpitiya"
+},
+{
+"code": 58,
+"name": "Embilipitiya"
+},
+{
+"code": 21,
+"name": "Galle"
+},
+{
+"code": 29,
+"name": "Gampaha"
+},
+{
+"code": 50,
+"name": "Gampola"
+},
+{
+"code": 86,
+"name": "Giriulla"
+},
+{
+"code": 57,
+"name": "Hambantota"
+},
+{
+"code": 88,
+"name": "Handala"
+},
+{
+"code": 96,
+"name": "Hanwella"
+},
+{
+"code": 0,
+"name": "Head Office"
+},
+{
+"code": 14,
+"name": "Head Office"
+},
+{
+"code": 999,
+"name": "Head Office"
+},
+{
+"code": 900,
+"name": "Head Office(Corporare)"
+},
+{
+"code": 100,
+"name": "Head Office(Retail)"
+},
+{
+"code": 102,
+"name": "Hingurakgoda"
+},
+{
+"code": 30,
+"name": "Homagama"
+},
+{
+"code": 27,
+"name": "Horana"
+},
+{
+"code": 601,
+"name": "Islamic Banking Unit"
+},
+{
+"code": 44,
+"name": "Ja Ela"
+},
+{
+"code": 37,
+"name": "Jaffna"
+},
+{
+"code": 3,
+"name": "Jawatta"
+},
+{
+"code": 26,
+"name": "Kadawatha"
+},
+{
+"code": 60,
+"name": "Kaduruwela"
+},
+{
+"code": 55,
+"name": "Kaduwela"
+},
+{
+"code": 84,
+"name": "Kahawatta"
+},
+{
+"code": 83,
+"name": "Kakirawa"
+},
+{
+"code": 53,
+"name": "kalmunai"
+},
+{
+"code": 16,
+"name": "Kalutara"
+},
+{
+"code": 28,
+"name": "Kandana"
+},
+{
+"code": 2,
+"name": "Kandy"
+},
+{
+"code": 80,
+"name": "Kandy City Centre"
+},
+{
+"code": 109,
+"name": "Katana"
+},
+{
+"code": 82,
+"name": "Katunayake"
+},
+{
+"code": 17,
+"name": "Kegalle"
+},
+{
+"code": 25,
+"name": "Kiribathgoda"
+},
+{
+"code": 89,
+"name": "Kochchikade"
+},
+{
+"code": 32,
+"name": "Kohuwala"
+},
+{
+"code": 24,
+"name": "Kotahena"
+},
+{
+"code": 42,
+"name": "Kuliyapitiya"
+},
+{
+"code": 7,
+"name": "Kurunegala"
+},
+{
+"code": 12,
+"name": "Maharagama"
+},
+{
+"code": 105,
+"name": "Mahawewa"
+},
+{
+"code": 75,
+"name": "Mahiyangana"
+},
+{
+"code": 31,
+"name": "Malabe"
+},
+{
+"code": 97,
+"name": "Manipai"
+},
+{
+"code": 103,
+"name": "Marine Drive"
+},
+{
+"code": 46,
+"name": "Matale"
+},
+{
+"code": 6,
+"name": "Matara"
+},
+{
+"code": 45,
+"name": "Matugama"
+},
+{
+"code": 63,
+"name": "Minuwangoda"
+},
+{
+"code": 70,
+"name": "Monaragala"
+},
+{
+"code": 15,
+"name": "Moratuwa"
+},
+{
+"code": 20,
+"name": "Mount Lavinia"
+},
+{
+"code": 74,
+"name": "Narahenpita"
+},
+{
+"code": 91,
+"name": "Narammala"
+},
+{
+"code": 95,
+"name": "Natthandiya"
+},
+{
+"code": 1,
+"name": "Navam Mawatha"
+},
+{
+"code": 61,
+"name": "Nawalapitiya"
+},
+{
+"code": 9,
+"name": "Negombo"
+},
+{
+"code": 66,
+"name": "Nelliady"
+},
+{
+"code": 69,
+"name": "Nikaweratiya"
+},
+{
+"code": 54,
+"name": "Nittambuwa"
+},
+{
+"code": 4,
+"name": "Nugegoda"
+},
+{
+"code": 76,
+"name": "Nuwara Eliya"
+},
+{
+"code": 79,
+"name": "Old Moor Street"
+},
+{
+"code": 35,
+"name": "Panadura"
+},
+{
+"code": 22,
+"name": "Pelawatte"
+},
+{
+"code": 43,
+"name": "Pettah"
+},
+{
+"code": 49,
+"name": "Pilimatalawa"
+},
+{
+"code": 23,
+"name": "Piliyandala"
+},
+{
+"code": 87,
+"name": "Pitakotte"
+},
+{
+"code": 33,
+"name": "Puttalam"
+},
+{
+"code": 5,
+"name": "Rajagiriya"
+},
+{
+"code": 73,
+"name": "Ratmalana"
+},
+{
+"code": 13,
+"name": "Ratnapura"
+},
+{
+"code": 104,
+"name": "Thambuttegama"
+},
+{
+"code": 98,
+"name": "Thirunelvely"
+},
+{
+"code": 92,
+"name": "Tissamaharama"
+},
+{
+"code": 38,
+"name": "Trincomalee"
+},
+{
+"code": 81,
+"name": "Uragasmanhandiya"
+},
+{
+"code": 41,
+"name": "Vavuniya"
+},
+{
+"code": 101,
+"name": "Warakapola"
+},
+{
+"code": 56,
+"name": "Wariyapola"
+},
+{
+"code": 11,
+"name": "Wattala"
+},
+{
+"code": 8,
+"name": "Wellawatte"
+},
+{
+"code": 36,
+"name": "Wennappuwa"
+},
+{
+"code": 68,
+"name": "Yakkala"
+}
+]
+},
+{
+"id": 8,
+"name": "National Savings Bank (NSB)",
+"bankCode": 7719,
+"type": "government",
+"swift": "NSBLKLCO",
+"phone": "1970",
+"address": "Colombo 03",
+"email": "",
+"website": "https://www.nsb.lk",
+"branches": [
+{
+"code": 752,
+"name": "Akkaraipattu"
+},
+{
+"code": 55,
+"name": "Akuressa"
+},
+{
+"code": 132,
+"name": "Alawathugoda"
+},
+{
+"code": 742,
+"name": "Alawwa"
+},
+{
+"code": 105,
+"name": "Aluthgama"
+},
+{
+"code": 33,
+"name": "Ambalangoda"
+},
+{
+"code": 11,
+"name": "Ambalantota"
+},
+{
+"code": 30,
+"name": "Ampara"
+},
+{
+"code": 746,
+"name": "Anamaduwa"
+},
+{
+"code": 760,
+"name": "Angunakolapelessa"
+},
+{
+"code": 5,
+"name": "Anuradhapura"
+},
+{
+"code": 721,
+"name": "Aranayake Piyasa"
+},
+{
+"code": 727,
+"name": "Arayampathy"
+},
+{
+"code": 718,
+"name": "Atchuvely NSB Piyasa"
+},
+{
+"code": 703,
+"name": "Athurugiriya Piyasa"
+},
+{
+"code": 57,
+"name": "Avissawella"
+},
+{
+"code": 128,
+"name": "Badalkumbura"
+},
+{
+"code": 734,
+"name": "Baddegama"
+},
+{
+"code": 22,
+"name": "Badulla"
+},
+{
+"code": 786,
+"name": "Baduraliya"
+},
+{
+"code": 91,
+"name": "Balangoda"
+},
+{
+"code": 23,
+"name": "Bambalapitiya"
+},
+{
+"code": 126,
+"name": "Bandaragama"
+},
+{
+"code": 60,
+"name": "Bandarawela"
+},
+{
+"code": 80,
+"name": "Battaramulla"
+},
+{
+"code": 21,
+"name": "Batticaloa"
+},
+{
+"code": 48,
+"name": "Beliatta"
+},
+{
+"code": 28,
+"name": "Beruwala"
+},
+{
+"code": 708,
+"name": "Bibile”piyasa”"
+},
+{
+"code": 785,
+"name": "Bingiriya"
+},
+{
+"code": 124,
+"name": "Boralesgamuwa"
+},
+{
+"code": 61,
+"name": "Borella"
+},
+{
+"code": 912,
+"name": "Br. Management Division"
+},
+{
+"code": 710,
+"name": "Bulathkohupitiya"
+},
+{
+"code": 738,
+"name": "Bulathsinhala"
+},
+{
+"code": 741,
+"name": "Buttala"
+},
+{
+"code": 725,
+"name": "Chankanai Piyasa"
+},
+{
+"code": 73,
+"name": "Chavakachcheri"
+},
+{
+"code": 109,
+"name": "Chenkaladi"
+},
+{
+"code": 7,
+"name": "Chilaw"
+},
+{
+"code": 72,
+"name": "Chunnakam"
+},
+{
+"code": 2,
+"name": "City"
+},
+{
+"code": 910,
+"name": "Credit Division, (H.L Division)"
+},
+{
+"code": 103,
+"name": "Dambulla"
+},
+{
+"code": 129,
+"name": "Dankotuwa"
+},
+{
+"code": 24,
+"name": "Dehiwala"
+},
+{
+"code": 747,
+"name": "Delgoda"
+},
+{
+"code": 119,
+"name": "Delkanda"
+},
+{
+"code": 783,
+"name": "Deltota"
+},
+{
+"code": 54,
+"name": "Deniyaya"
+},
+{
+"code": 112,
+"name": "Deraniyagala"
+},
+{
+"code": 39,
+"name": "Devinuwara"
+},
+{
+"code": 82,
+"name": "Dickwella"
+},
+{
+"code": 748,
+"name": "Digana"
+},
+{
+"code": 96,
+"name": "Divulapitiya"
+},
+{
+"code": 94,
+"name": "Elpitiya"
+},
+{
+"code": 13,
+"name": "Embilipitiya"
+},
+{
+"code": 788,
+"name": "Eppawala"
+},
+{
+"code": 145,
+"name": "Galagedara"
+},
+{
+"code": 137,
+"name": "Galenbindunuwewa"
+},
+{
+"code": 755,
+"name": "Galewela"
+},
+{
+"code": 729,
+"name": "Galgamuwa"
+},
+{
+"code": 3,
+"name": "Galle"
+},
+{
+"code": 58,
+"name": "Galnewa"
+},
+{
+"code": 37,
+"name": "Gampaha"
+},
+{
+"code": 74,
+"name": "Gampola"
+},
+{
+"code": 705,
+"name": "Ganemulla Piyasa"
+},
+{
+"code": 791,
+"name": "Gelioya"
+},
+{
+"code": 784,
+"name": "Ginigathhena"
+},
+{
+"code": 787,
+"name": "Giriulla"
+},
+{
+"code": 133,
+"name": "Godakawela"
+},
+{
+"code": 735,
+"name": "Habaraduwa"
+},
+{
+"code": 62,
+"name": "Hakmana"
+},
+{
+"code": 751,
+"name": "Hali Ela"
+},
+{
+"code": 781,
+"name": "Hambantota"
+},
+{
+"code": 750,
+"name": "Hanwella"
+},
+{
+"code": 116,
+"name": "Hatton"
+},
+{
+"code": 1,
+"name": "Head Office"
+},
+{
+"code": 709,
+"name": "Hettipola"
+},
+{
+"code": 113,
+"name": "Hikkaduwa"
+},
+{
+"code": 76,
+"name": "Hingurakgoda"
+},
+{
+"code": 27,
+"name": "Homagama"
+},
+{
+"code": 63,
+"name": "Horana"
+},
+{
+"code": 136,
+"name": "Horawpathana"
+},
+{
+"code": 771,
+"name": "Ibbagamuwa"
+},
+{
+"code": 911,
+"name": "IBU (NRFC)"
+},
+{
+"code": 757,
+"name": "Imaduwa"
+},
+{
+"code": 764,
+"name": "Ingiriya"
+},
+{
+"code": 36,
+"name": "Ja-Ela"
+},
+{
+"code": 6,
+"name": "Jaffna"
+},
+{
+"code": 75,
+"name": "Kadawatha"
+},
+{
+"code": 122,
+"name": "Kaduruwela"
+},
+{
+"code": 95,
+"name": "Kaduwela"
+},
+{
+"code": 759,
+"name": "Kahatagasdigiliya"
+},
+{
+"code": 104,
+"name": "Kahathuduwa"
+},
+{
+"code": 737,
+"name": "Kahawatte"
+},
+{
+"code": 739,
+"name": "Kalawana"
+},
+{
+"code": 114,
+"name": "Kalawanchikudy"
+},
+{
+"code": 47,
+"name": "Kalmunai"
+},
+{
+"code": 115,
+"name": "Kalubowila"
+},
+{
+"code": 12,
+"name": "Kalutara"
+},
+{
+"code": 86,
+"name": "Kamburupitiya"
+},
+{
+"code": 141,
+"name": "Kandana"
+},
+{
+"code": 15,
+"name": "Kandy"
+},
+{
+"code": 81,
+"name": "Kandy 2nd"
+},
+{
+"code": 711,
+"name": "Kandy City Center"
+},
+{
+"code": 762,
+"name": "Kantale"
+},
+{
+"code": 731,
+"name": "Karainagar"
+},
+{
+"code": 121,
+"name": "Karapitiya"
+},
+{
+"code": 93,
+"name": "Katubedda"
+},
+{
+"code": 723,
+"name": "Katugastota Piyasa"
+},
+{
+"code": 52,
+"name": "Katunayake"
+},
+{
+"code": 730,
+"name": "Kayts"
+},
+{
+"code": 767,
+"name": "Kebithigollawa"
+},
+{
+"code": 18,
+"name": "Kegalle"
+},
+{
+"code": 775,
+"name": "Kekanadura"
+},
+{
+"code": 14,
+"name": "Kekirawa"
+},
+{
+"code": 716,
+"name": "Kelaniya NSB Piyasa"
+},
+{
+"code": 19,
+"name": "Kilinochchi"
+},
+{
+"code": 67,
+"name": "Kiribathgoda"
+},
+{
+"code": 778,
+"name": "Kiriella"
+},
+{
+"code": 99,
+"name": "Kirindiwela"
+},
+{
+"code": 31,
+"name": "Kochchikade"
+},
+{
+"code": 131,
+"name": "Kodikamam"
+},
+{
+"code": 65,
+"name": "Kollupitiya 2nd"
+},
+{
+"code": 147,
+"name": "Kopay"
+},
+{
+"code": 87,
+"name": "Kotahena"
+},
+{
+"code": 102,
+"name": "Kottawa"
+},
+{
+"code": 8,
+"name": "Kuliyapitiya"
+},
+{
+"code": 17,
+"name": "kurunegala"
+},
+{
+"code": 772,
+"name": "Kuruwita"
+},
+{
+"code": 761,
+"name": "Madampe"
+},
+{
+"code": 83,
+"name": "Mahabage"
+},
+{
+"code": 53,
+"name": "Maharagama"
+},
+{
+"code": 41,
+"name": "Mahiyanganaya"
+},
+{
+"code": 142,
+"name": "Maho"
+},
+{
+"code": 123,
+"name": "Malabe"
+},
+{
+"code": 77,
+"name": "Maligawatta"
+},
+{
+"code": 774,
+"name": "Mallavi"
+},
+{
+"code": 107,
+"name": "Manipay"
+},
+{
+"code": 49,
+"name": "Mannar"
+},
+{
+"code": 69,
+"name": "Marawila"
+},
+{
+"code": 16,
+"name": "Matale"
+},
+{
+"code": 4,
+"name": "Matara"
+},
+{
+"code": 45,
+"name": "Matugama"
+},
+{
+"code": 59,
+"name": "Mawanella"
+},
+{
+"code": 749,
+"name": "Mawathagama"
+},
+{
+"code": 763,
+"name": "Medawachchiya"
+},
+{
+"code": 776,
+"name": "Medirigiriya"
+},
+{
+"code": 106,
+"name": "Meegoda"
+},
+{
+"code": 780,
+"name": "Melsiripura"
+},
+{
+"code": 724,
+"name": "Middeniya Piyasa"
+},
+{
+"code": 98,
+"name": "Minuwangoda"
+},
+{
+"code": 79,
+"name": "Mirigama"
+},
+{
+"code": 46,
+"name": "Monaragala"
+},
+{
+"code": 125,
+"name": "Moratumulla"
+},
+{
+"code": 20,
+"name": "Moratuwa"
+},
+{
+"code": 90,
+"name": "Morawaka"
+},
+{
+"code": 68,
+"name": "Mount Lavinia"
+},
+{
+"code": 127,
+"name": "Mulgampola"
+},
+{
+"code": 130,
+"name": "Mullative"
+},
+{
+"code": 733,
+"name": "Mulleriyawa New Town"
+},
+{
+"code": 732,
+"name": "Mutwal"
+},
+{
+"code": 64,
+"name": "Narahenpita"
+},
+{
+"code": 707,
+"name": "Narammala Piyasa"
+},
+{
+"code": 34,
+"name": "Naththandiya"
+},
+{
+"code": 779,
+"name": "Naula"
+},
+{
+"code": 111,
+"name": "Nawala"
+},
+{
+"code": 50,
+"name": "Nawalapitiya"
+},
+{
+"code": 9,
+"name": "Negombo"
+},
+{
+"code": 717,
+"name": "Nelliady NSB Piyasa"
+},
+{
+"code": 704,
+"name": "Neluwa Piyasa"
+},
+{
+"code": 40,
+"name": "Nikaweratiya"
+},
+{
+"code": 100,
+"name": "Nittambuwa"
+},
+{
+"code": 777,
+"name": "Nivithigala"
+},
+{
+"code": 745,
+"name": "Nochchiyagama"
+},
+{
+"code": 26,
+"name": "Nugegoda"
+},
+{
+"code": 56,
+"name": "Nuwara Eliya"
+},
+{
+"code": 753,
+"name": "Palugamam"
+},
+{
+"code": 43,
+"name": "Panadura"
+},
+{
+"code": 758,
+"name": "Passara"
+},
+{
+"code": 909,
+"name": "PBU – Ampara"
+},
+{
+"code": 906,
+"name": "PBU – Anuradhapura"
+},
+{
+"code": 917,
+"name": "PBU – Eheliyagoda"
+},
+{
+"code": 903,
+"name": "PBU – Galle"
+},
+{
+"code": 908,
+"name": "PBU – Gampaha"
+},
+{
+"code": 901,
+"name": "PBU – Head Office"
+},
+{
+"code": 916,
+"name": "PBU – Jaffna"
+},
+{
+"code": 907,
+"name": "PBU – Kalutara"
+},
+{
+"code": 902,
+"name": "PBU – Kandy"
+},
+{
+"code": 905,
+"name": "PBU – Kegalle"
+},
+{
+"code": 915,
+"name": "PBU – Kurunegala"
+},
+{
+"code": 904,
+"name": "PBU – Matara"
+},
+{
+"code": 25,
+"name": "Peliyagoda"
+},
+{
+"code": 736,
+"name": "Pelmadulla"
+},
+{
+"code": 134,
+"name": "Periyakallar"
+},
+{
+"code": 51,
+"name": "Pettah"
+},
+{
+"code": 84,
+"name": "Pilimathalawa"
+},
+{
+"code": 71,
+"name": "Piliyandala"
+},
+{
+"code": 138,
+"name": "Pitakatte"
+},
+{
+"code": 139,
+"name": "Pitigala"
+},
+{
+"code": 32,
+"name": "Point Pedro"
+},
+{
+"code": 726,
+"name": "Polgahawela"
+},
+{
+"code": 770,
+"name": "Pothuvil"
+},
+{
+"code": 790,
+"name": "Pugoda"
+},
+{
+"code": 744,
+"name": "Pundaluoya"
+},
+{
+"code": 769,
+"name": "Pussellawa"
+},
+{
+"code": 44,
+"name": "Puttalama"
+},
+{
+"code": 719,
+"name": "Puwakaramba Piyasa"
+},
+{
+"code": 728,
+"name": "Raddolugama"
+},
+{
+"code": 792,
+"name": "Ragala"
+},
+{
+"code": 701,
+"name": "Ragama Piyasa"
+},
+{
+"code": 765,
+"name": "Rambukkana"
+},
+{
+"code": 10,
+"name": "Ratnapura"
+},
+{
+"code": 782,
+"name": "Rideegama"
+},
+{
+"code": 722,
+"name": "Rikillagaskada Piyasa"
+},
+{
+"code": 35,
+"name": "Ruwanwella"
+},
+{
+"code": 118,
+"name": "Samanthurai"
+},
+{
+"code": 146,
+"name": "Siyambalanduwa"
+},
+{
+"code": 754,
+"name": "Sooriyawewa"
+},
+{
+"code": 756,
+"name": "Tambuttegama"
+},
+{
+"code": 713,
+"name": "Tangalle NSB Piyasa"
+},
+{
+"code": 78,
+"name": "Thalawakele"
+},
+{
+"code": 789,
+"name": "Thalawathugoda"
+},
+{
+"code": 135,
+"name": "Thamabiluvil"
+},
+{
+"code": 108,
+"name": "Thirunelvely"
+},
+{
+"code": 97,
+"name": "Tissamaharama"
+},
+{
+"code": 89,
+"name": "Trincomalee"
+},
+{
+"code": 143,
+"name": "Udugama"
+},
+{
+"code": 144,
+"name": "Uhana"
+},
+{
+"code": 110,
+"name": "Uragasmanhandiya"
+},
+{
+"code": 140,
+"name": "Urubokka"
+},
+{
+"code": 720,
+"name": "Valaichenai Piyasa"
+},
+{
+"code": 773,
+"name": "Vankalai"
+},
+{
+"code": 88,
+"name": "Vavuniya"
+},
+{
+"code": 92,
+"name": "Veyangoda"
+},
+{
+"code": 715,
+"name": "Wadduwa NSB Piyasa"
+},
+{
+"code": 714,
+"name": "Walasmulla NSB Piyasa"
+},
+{
+"code": 42,
+"name": "Warakapola"
+},
+{
+"code": 766,
+"name": "Wariyapola"
+},
+{
+"code": 85,
+"name": "Wattala"
+},
+{
+"code": 768,
+"name": "Wattegama"
+},
+{
+"code": 712,
+"name": "Weeraketiya NSB Piyasa"
+},
+{
+"code": 66,
+"name": "Weligama"
+},
+{
+"code": 117,
+"name": "Welikada"
+},
+{
+"code": 101,
+"name": "Welimada"
+},
+{
+"code": 706,
+"name": "Wellampitiya Piyasa"
+},
+{
+"code": 70,
+"name": "Wellawatta"
+},
+{
+"code": 740,
+"name": "Wellawaya"
+},
+{
+"code": 29,
+"name": "Wennappuwa"
+},
+{
+"code": 702,
+"name": "WTC Piyasa"
+},
+{
+"code": 120,
+"name": "Yakkala"
+},
+{
+"code": 743,
+"name": "Yatiyantota"
+}
+]
+},
+{
+"id": 9,
+"name": "Nations Trust Bank PLC",
+"bankCode": 7162,
+"type": "commercial",
+"swift": "NTRPKLCO",
+"phone": "+94 11 4313131",
+"address": "Nawam Mawatha, Colombo 02",
+"email": "info@nationstrust.com",
+"website": "https://www.nationstrust.com",
+"branches": [
+{
+"code": 57,
+"name": "Akkaraipattu"
+},
+{
+"code": 63,
+"name": "Akuressa"
+},
+{
+"code": 47,
+"name": "Aluthgama"
+},
+{
+"code": 56,
+"name": "Ambalangoda"
+},
+{
+"code": 62,
+"name": "Ambalantota"
+},
+{
+"code": 39,
+"name": "Anuradhapura"
+},
+{
+"code": 91,
+"name": "Avissawella"
+},
+{
+"code": 59,
+"name": "Badulla"
+},
+{
+"code": 64,
+"name": "Balangoda"
+},
+{
+"code": 72,
+"name": "Bandaragama"
+},
+{
+"code": 32,
+"name": "Bandarawela"
+},
+{
+"code": 10,
+"name": "Battaramulla"
+},
+{
+"code": 34,
+"name": "Batticaloa"
+},
+{
+"code": 75,
+"name": "Boralasgamuwa"
+},
+{
+"code": 15,
+"name": "Borella"
+},
+{
+"code": 400,
+"name": "Card Center"
+},
+{
+"code": 0,
+"name": "Central Clearing"
+},
+{
+"code": 43,
+"name": "Chilaw"
+},
+{
+"code": 2,
+"name": "Colpetty"
+},
+{
+"code": 6,
+"name": "Corporate"
+},
+{
+"code": 22,
+"name": "Crescat"
+},
+{
+"code": 23,
+"name": "Dehiwala"
+},
+{
+"code": 65,
+"name": "Deniyaya"
+},
+{
+"code": 11,
+"name": "Dharmapala Mawatha"
+},
+{
+"code": 73,
+"name": "Digana"
+},
+{
+"code": 82,
+"name": "Elpitiya"
+},
+{
+"code": 61,
+"name": "Embilipitiya"
+},
+{
+"code": 29,
+"name": "Galle"
+},
+{
+"code": 18,
+"name": "Gampaha"
+},
+{
+"code": 88,
+"name": "Gampola"
+},
+{
+"code": 83,
+"name": "Giriulla"
+},
+{
+"code": 77,
+"name": "Gothatuwa"
+},
+{
+"code": 58,
+"name": "Hambantota"
+},
+{
+"code": 25,
+"name": "Havelock Town"
+},
+{
+"code": 999,
+"name": "Head Office"
+},
+{
+"code": 87,
+"name": "Hikkaduwa"
+},
+{
+"code": 31,
+"name": "Homagama"
+},
+{
+"code": 36,
+"name": "Horana"
+},
+{
+"code": 60,
+"name": "Ja-Ela"
+},
+{
+"code": 35,
+"name": "Jaffna"
+},
+{
+"code": 21,
+"name": "Kadawatha"
+},
+{
+"code": 45,
+"name": "Kaduruwela"
+},
+{
+"code": 70,
+"name": "Kaduwela"
+},
+{
+"code": 37,
+"name": "Kalmunai"
+},
+{
+"code": 4,
+"name": "Kandy"
+},
+{
+"code": 93,
+"name": "Kandy City Center"
+},
+{
+"code": 67,
+"name": "Karapitiya"
+},
+{
+"code": 69,
+"name": "Katugastota"
+},
+{
+"code": 79,
+"name": "Kegalle"
+},
+{
+"code": 16,
+"name": "Kiribathgoda"
+},
+{
+"code": 54,
+"name": "Kohuwala"
+},
+{
+"code": 504,
+"name": "Kohuwala"
+},
+{
+"code": 19,
+"name": "Kotahena"
+},
+{
+"code": 76,
+"name": "Kottawa"
+},
+{
+"code": 55,
+"name": "Kuliyapitiya"
+},
+{
+"code": 12,
+"name": "Kurunegala"
+},
+{
+"code": 500,
+"name": "Liberty Plaza"
+},
+{
+"code": 9,
+"name": "Mahabage"
+},
+{
+"code": 13,
+"name": "Maharagama"
+},
+{
+"code": 38,
+"name": "Malabe"
+},
+{
+"code": 92,
+"name": "Matale"
+},
+{
+"code": 28,
+"name": "Matara"
+},
+{
+"code": 66,
+"name": "Matugama"
+},
+{
+"code": 90,
+"name": "Mawathagama"
+},
+{
+"code": 86,
+"name": "Minuwangoda"
+},
+{
+"code": 74,
+"name": "Monaragala"
+},
+{
+"code": 14,
+"name": "Moratuwa"
+},
+{
+"code": 52,
+"name": "Mount Lavinia"
+},
+{
+"code": 502,
+"name": "Mount Lavinia"
+},
+{
+"code": 81,
+"name": "Narahenpita"
+},
+{
+"code": 27,
+"name": "Nawala"
+},
+{
+"code": 24,
+"name": "Nawam Mawatha"
+},
+{
+"code": 7,
+"name": "Negombo(C.S.P.)"
+},
+{
+"code": 44,
+"name": "Nelliady"
+},
+{
+"code": 85,
+"name": "Nittambuwa"
+},
+{
+"code": 1,
+"name": "NTB.Head Office,"
+},
+{
+"code": 53,
+"name": "Nugegoda"
+},
+{
+"code": 503,
+"name": "Nugegoda"
+},
+{
+"code": 42,
+"name": "Nuwara Eliya"
+},
+{
+"code": 71,
+"name": "Old Moor Street"
+},
+{
+"code": 17,
+"name": "Panadura"
+},
+{
+"code": 26,
+"name": "Peradeniya"
+},
+{
+"code": 8,
+"name": "Pettah"
+},
+{
+"code": 46,
+"name": "Pettah Second"
+},
+{
+"code": 40,
+"name": "Piliyandala"
+},
+{
+"code": 68,
+"name": "Rajagiriya"
+},
+{
+"code": 41,
+"name": "Ratnapura"
+},
+{
+"code": 3,
+"name": "Sri Sangharaja Mw."
+},
+{
+"code": 89,
+"name": "Tangalle"
+},
+{
+"code": 30,
+"name": "Thalawathugoda"
+},
+{
+"code": 80,
+"name": "Tissamaharama"
+},
+{
+"code": 49,
+"name": "Trincomalee"
+},
+{
+"code": 33,
+"name": "Vavuniya"
+},
+{
+"code": 20,
+"name": "Ward Place"
+},
+{
+"code": 78,
+"name": "Wariyapola"
+},
+{
+"code": 51,
+"name": "Wattala"
+},
+{
+"code": 501,
+"name": "Wattala"
+},
+{
+"code": 84,
+"name": "Weligama"
+},
+{
+"code": 5,
+"name": "Wellawatte"
+},
+{
+"code": 48,
+"name": "Wennappuwa"
+},
+{
+"code": 50,
+"name": "World Trade Centre"
+}
+]
+},
+{
+"id": 10,
+"name": "Pan Asia Banking Corporation PLC",
+"bankCode": 7311,
+"type": "commercial",
+"swift": "PAABKLCO",
+"phone": "+94 11 2565565",
+"address": "Galle Road, Colombo 03",
+"email": "pabc@pabcbank.com",
+"website": "https://www.panasiabank.lk",
+"branches": [
+{
+"code": 60,
+"name": "Akkaraipaththu"
+},
+{
+"code": 72,
+"name": "Akuressa"
+},
+{
+"code": 41,
+"name": "Ambalangoda"
+},
+{
+"code": 53,
+"name": "Ambalanthota"
+},
+{
+"code": 32,
+"name": "Anuradhapura"
+},
+{
+"code": 45,
+"name": "Badulla"
+},
+{
+"code": 62,
+"name": "Balangoda"
+},
+{
+"code": 9,
+"name": "Bambalapitiya"
+},
+{
+"code": 48,
+"name": "Bandarawela"
+},
+{
+"code": 63,
+"name": "Battaramulla"
+},
+{
+"code": 40,
+"name": "Batticaloa"
+},
+{
+"code": 31,
+"name": "Borella"
+},
+{
+"code": 36,
+"name": "Chilaw"
+},
+{
+"code": 61,
+"name": "Chunnakam"
+},
+{
+"code": 78,
+"name": "Colombo Gold Centre"
+},
+{
+"code": 19,
+"name": "Dam Street"
+},
+{
+"code": 49,
+"name": "Dambulla"
+},
+{
+"code": 15,
+"name": "Dehiwela"
+},
+{
+"code": 38,
+"name": "Embilipitiya"
+},
+{
+"code": 71,
+"name": "Galewela"
+},
+{
+"code": 25,
+"name": "Galle"
+},
+{
+"code": 11,
+"name": "Gampaha"
+},
+{
+"code": 30,
+"name": "Gampola"
+},
+{
+"code": 75,
+"name": "Hatton"
+},
+{
+"code": 999,
+"name": "Head Office"
+},
+{
+"code": 76,
+"name": "Homagama"
+},
+{
+"code": 77,
+"name": "Horana"
+},
+{
+"code": 814,
+"name": "Internationl Remittance"
+},
+{
+"code": 66,
+"name": "Ja-Ela"
+},
+{
+"code": 37,
+"name": "Jaffna"
+},
+{
+"code": 26,
+"name": "Kadawatha"
+},
+{
+"code": 52,
+"name": "Kaduruwela"
+},
+{
+"code": 81,
+"name": "Kaduwela"
+},
+{
+"code": 42,
+"name": "Kalmunai"
+},
+{
+"code": 47,
+"name": "Kalubowila"
+},
+{
+"code": 33,
+"name": "Kalutara"
+},
+{
+"code": 5,
+"name": "Kandy"
+},
+{
+"code": 44,
+"name": "Kandy City Centre"
+},
+{
+"code": 57,
+"name": "Kanthankudy"
+},
+{
+"code": 20,
+"name": "Katugastota"
+},
+{
+"code": 27,
+"name": "Kegalle"
+},
+{
+"code": 67,
+"name": "Kekirawa"
+},
+{
+"code": 43,
+"name": "Kilinochchi"
+},
+{
+"code": 54,
+"name": "Kiribathgoda"
+},
+{
+"code": 22,
+"name": "Kirulapana"
+},
+{
+"code": 3,
+"name": "Kollupitiya"
+},
+{
+"code": 14,
+"name": "Kotahena"
+},
+{
+"code": 80,
+"name": "Kottawa"
+},
+{
+"code": 46,
+"name": "Kuliyapitiya"
+},
+{
+"code": 58,
+"name": "Kundasale"
+},
+{
+"code": 12,
+"name": "Kurunegala"
+},
+{
+"code": 23,
+"name": "Maharagama"
+},
+{
+"code": 35,
+"name": "Malabe"
+},
+{
+"code": 39,
+"name": "Matale"
+},
+{
+"code": 13,
+"name": "Matara"
+},
+{
+"code": 82,
+"name": "Mawanella"
+},
+{
+"code": 1,
+"name": "Metro"
+},
+{
+"code": 69,
+"name": "Minuwangoda"
+},
+{
+"code": 59,
+"name": "Monaragala"
+},
+{
+"code": 24,
+"name": "Moratuwa"
+},
+{
+"code": 21,
+"name": "Narahenpita"
+},
+{
+"code": 79,
+"name": "Nawala"
+},
+{
+"code": 10,
+"name": "Negombo"
+},
+{
+"code": 56,
+"name": "Nelliady"
+},
+{
+"code": 8,
+"name": "Nugegoda"
+},
+{
+"code": 18,
+"name": "Old Moor Street"
+},
+{
+"code": 17,
+"name": "Panadura"
+},
+{
+"code": 2,
+"name": "Panchikawatte"
+},
+{
+"code": 51,
+"name": "Peradeniya"
+},
+{
+"code": 4,
+"name": "Pettah"
+},
+{
+"code": 65,
+"name": "Pilimathalawa"
+},
+{
+"code": 55,
+"name": "Piliyandala"
+},
+{
+"code": 64,
+"name": "Puttalama"
+},
+{
+"code": 6,
+"name": "Rajagiriya"
+},
+{
+"code": 50,
+"name": "Ratmalana"
+},
+{
+"code": 7,
+"name": "Ratnapura"
+},
+{
+"code": 74,
+"name": "Tangalle"
+},
+{
+"code": 68,
+"name": "Thalawathugoda"
+},
+{
+"code": 73,
+"name": "Trincomalee"
+},
+{
+"code": 34,
+"name": "Vavuniya"
+},
+{
+"code": 70,
+"name": "Warakapola"
+},
+{
+"code": 16,
+"name": "Wattala"
+},
+{
+"code": 29,
+"name": "Wellawatta"
+},
+{
+"code": 28,
+"name": "Wennappuwa"
+}
+]
+},
+{
+"id": 11,
+"name": "People's Bank",
+"bankCode": 7135,
+"type": "government",
+"swift": "PSBKLKLX",
+"phone": "1961",
+"address": "Colombo 02",
+"email": "info@peoplesbank.lk",
+"website": "https://www.peoplesbank.lk",
+"branches": [
+{
+"code": 228,
+"name": "Addalachchene"
+},
+{
+"code": 188,
+"name": "Ahangama"
+},
+{
+"code": 63,
+"name": "Akkaraipattu"
+},
+{
+"code": 153,
+"name": "Akurana"
+},
+{
+"code": 117,
+"name": "Akuressa"
+},
+{
+"code": 294,
+"name": "Alawathugoda"
+},
+{
+"code": 149,
+"name": "Alawwa"
+},
+{
+"code": 84,
+"name": "Aluthgama"
+},
+{
+"code": 35,
+"name": "Ambalangoda"
+},
+{
+"code": 72,
+"name": "Ambalantota"
+},
+{
+"code": 15,
+"name": "Ampara"
+},
+{
+"code": 267,
+"name": "Anamaduwa"
+},
+{
+"code": 205,
+"name": "Angunakolapalessa"
+},
+{
+"code": 183,
+"name": "Ankumbura"
+},
+{
+"code": 8,
+"name": "Anuradhapura"
+},
+{
+"code": 220,
+"name": "Anuradhapura-Nuwarawewa"
+},
+{
+"code": 253,
+"name": "Aralaganwila"
+},
+{
+"code": 248,
+"name": "Aranayake"
+},
+{
+"code": 107,
+"name": "Atchchuvely"
+},
+{
+"code": 29,
+"name": "Avissawella"
+},
+{
+"code": 347,
+"name": "Badalkubura"
+},
+{
+"code": 87,
+"name": "Baddegama"
+},
+{
+"code": 10,
+"name": "Badulla"
+},
+{
+"code": 269,
+"name": "Badulla-Muthiyangana"
+},
+{
+"code": 283,
+"name": "Baduraliya"
+},
+{
+"code": 242,
+"name": "Bakamuna"
+},
+{
+"code": 17,
+"name": "Balangoda"
+},
+{
+"code": 154,
+"name": "Balapitiya"
+},
+{
+"code": 310,
+"name": "Bambalapitiya"
+},
+{
+"code": 121,
+"name": "Bandaragama"
+},
+{
+"code": 37,
+"name": "Bandarawela"
+},
+{
+"code": 234,
+"name": "Batapola"
+},
+{
+"code": 208,
+"name": "Battaramulla"
+},
+{
+"code": 75,
+"name": "Batticaloa"
+},
+{
+"code": 113,
+"name": "Batticaloa Town"
+},
+{
+"code": 244,
+"name": "Beliatta"
+},
+{
+"code": 311,
+"name": "Beruwala"
+},
+{
+"code": 11,
+"name": "Bibile"
+},
+{
+"code": 172,
+"name": "Bingiriya"
+},
+{
+"code": 354,
+"name": "Bogawanthalawa"
+},
+{
+"code": 209,
+"name": "Boralanda"
+},
+{
+"code": 348,
+"name": "Boralesgamuwa"
+},
+{
+"code": 78,
+"name": "Borella"
+},
+{
+"code": 320,
+"name": "Borella Town"
+},
+{
+"code": 252,
+"name": "Bulathkohupitiya"
+},
+{
+"code": 161,
+"name": "Bulathsinhala"
+},
+{
+"code": 147,
+"name": "Buttala"
+},
+{
+"code": 326,
+"name": "Capricon"
+},
+{
+"code": 600,
+"name": "Card Center"
+},
+{
+"code": 999,
+"name": "CCD"
+},
+{
+"code": 108,
+"name": "Chankanai"
+},
+{
+"code": 110,
+"name": "Chavakachcheri"
+},
+{
+"code": 356,
+"name": "Cheddikulam"
+},
+{
+"code": 227,
+"name": "Chenkalady"
+},
+{
+"code": 24,
+"name": "Chilaw"
+},
+{
+"code": 109,
+"name": "Chunnakam"
+},
+{
+"code": 297,
+"name": "Dam Street"
+},
+{
+"code": 138,
+"name": "Dambulla"
+},
+{
+"code": 291,
+"name": "Dankotuwa"
+},
+{
+"code": 206,
+"name": "Davulagala"
+},
+{
+"code": 330,
+"name": "Dehiattakandiya"
+},
+{
+"code": 293,
+"name": "Dehiowita"
+},
+{
+"code": 19,
+"name": "Dehiwala"
+},
+{
+"code": 337,
+"name": "Dehiwela (Galle Rd.)"
+},
+{
+"code": 118,
+"name": "Delgoda"
+},
+{
+"code": 257,
+"name": "Deltota"
+},
+{
+"code": 71,
+"name": "Dematagoda"
+},
+{
+"code": 132,
+"name": "Deniyaya"
+},
+{
+"code": 180,
+"name": "Deraniyagala"
+},
+{
+"code": 243,
+"name": "Devinuwara"
+},
+{
+"code": 135,
+"name": "Dickwella"
+},
+{
+"code": 151,
+"name": "Diyatalawa"
+},
+{
+"code": 1,
+"name": "Duke Street"
+},
+{
+"code": 85,
+"name": "Eheliyagoda"
+},
+{
+"code": 73,
+"name": "Elpitiya"
+},
+{
+"code": 45,
+"name": "Embilipitiya"
+},
+{
+"code": 170,
+"name": "Eppawela"
+},
+{
+"code": 123,
+"name": "Eravur"
+},
+{
+"code": 114,
+"name": "Galagedera"
+},
+{
+"code": 177,
+"name": "Galenbindunuwewa"
+},
+{
+"code": 115,
+"name": "Galewela"
+},
+{
+"code": 184,
+"name": "Galgamuwa"
+},
+{
+"code": 185,
+"name": "Galigamuwa"
+},
+{
+"code": 301,
+"name": "Galkiriyagama"
+},
+{
+"code": 13,
+"name": "Galle Fort"
+},
+{
+"code": 169,
+"name": "Galle Main Street"
+},
+{
+"code": 179,
+"name": "Galnewa"
+},
+{
+"code": 26,
+"name": "Gampaha"
+},
+{
+"code": 18,
+"name": "Gampola"
+},
+{
+"code": 307,
+"name": "Gandara"
+},
+{
+"code": 332,
+"name": "Ganemulla"
+},
+{
+"code": 97,
+"name": "Gangodawila"
+},
+{
+"code": 302,
+"name": "Ginigathhena"
+},
+{
+"code": 298,
+"name": "Ginthupitiya"
+},
+{
+"code": 268,
+"name": "Girandurukotte"
+},
+{
+"code": 92,
+"name": "Giriulla"
+},
+{
+"code": 245,
+"name": "Godakawela"
+},
+{
+"code": 238,
+"name": "Gonagaldeniya"
+},
+{
+"code": 126,
+"name": "Grandpass"
+},
+{
+"code": 203,
+"name": "Habarana"
+},
+{
+"code": 130,
+"name": "Hakmana"
+},
+{
+"code": 195,
+"name": "Haldummulla"
+},
+{
+"code": 225,
+"name": "Haliela"
+},
+{
+"code": 7,
+"name": "Hambantota"
+},
+{
+"code": 22,
+"name": "Hanguranketha"
+},
+{
+"code": 229,
+"name": "Hanwella"
+},
+{
+"code": 216,
+"name": "Haputale"
+},
+{
+"code": 140,
+"name": "Hasalaka"
+},
+{
+"code": 341,
+"name": "Hataraliyadda"
+},
+{
+"code": 186,
+"name": "Hatton"
+},
+{
+"code": 204,
+"name": "Head Quarters"
+},
+{
+"code": 221,
+"name": "Hemmathagama"
+},
+{
+"code": 144,
+"name": "Hettipola"
+},
+{
+"code": 136,
+"name": "Hikkaduwa"
+},
+{
+"code": 6,
+"name": "Hingurakgoda"
+},
+{
+"code": 49,
+"name": "Homagama"
+},
+{
+"code": 41,
+"name": "Horana"
+},
+{
+"code": 218,
+"name": "Horowpathana"
+},
+{
+"code": 25,
+"name": "Hyde park Corner"
+},
+{
+"code": 207,
+"name": "Ibbagamuwa"
+},
+{
+"code": 247,
+"name": "Imaduwa"
+},
+{
+"code": 300,
+"name": "Ingiriya"
+},
+{
+"code": 4,
+"name": "International Division"
+},
+{
+"code": 239,
+"name": "Ja Ela"
+},
+{
+"code": 284,
+"name": "Jaffna Kannathiddy"
+},
+{
+"code": 104,
+"name": "Jaffna Main Street"
+},
+{
+"code": 30,
+"name": "Jaffna Stanley Road"
+},
+{
+"code": 162,
+"name": "Jaffna University"
+},
+{
+"code": 273,
+"name": "Kadawatha"
+},
+{
+"code": 159,
+"name": "Kadugannawa"
+},
+{
+"code": 196,
+"name": "Kaduwela"
+},
+{
+"code": 51,
+"name": "Kahatagasdigiliya"
+},
+{
+"code": 155,
+"name": "Kahawatte"
+},
+{
+"code": 235,
+"name": "Kalawana"
+},
+{
+"code": 339,
+"name": "Kallar"
+},
+{
+"code": 23,
+"name": "Kalmunai"
+},
+{
+"code": 125,
+"name": "Kalpitiya"
+},
+{
+"code": 289,
+"name": "Kaltota"
+},
+{
+"code": 39,
+"name": "Kalutara"
+},
+{
+"code": 190,
+"name": "Kaluwanchikudy"
+},
+{
+"code": 133,
+"name": "Kamburupitiya"
+},
+{
+"code": 175,
+"name": "Kandana"
+},
+{
+"code": 250,
+"name": "Kandeketiya"
+},
+{
+"code": 3,
+"name": "Kandy"
+},
+{
+"code": 357,
+"name": "Kandy City Centre"
+},
+{
+"code": 31,
+"name": "Kankasanthurai"
+},
+{
+"code": 90,
+"name": "Kantale"
+},
+{
+"code": 223,
+"name": "Karaitivu"
+},
+{
+"code": 343,
+"name": "Karapitiya"
+},
+{
+"code": 168,
+"name": "Kataragama"
+},
+{
+"code": 65,
+"name": "Kattankudy"
+},
+{
+"code": 313,
+"name": "Katubedda"
+},
+{
+"code": 89,
+"name": "Katugastota"
+},
+{
+"code": 276,
+"name": "Katunayake"
+},
+{
+"code": 105,
+"name": "Kayts"
+},
+{
+"code": 150,
+"name": "Kebithigollawa"
+},
+{
+"code": 27,
+"name": "Kegalle"
+},
+{
+"code": 299,
+"name": "Kegalle Bazaar"
+},
+{
+"code": 259,
+"name": "Kehelwatte"
+},
+{
+"code": 42,
+"name": "Kekirawa"
+},
+{
+"code": 55,
+"name": "Kelaniya"
+},
+{
+"code": 240,
+"name": "Keppetipola"
+},
+{
+"code": 327,
+"name": "Kesbewa"
+},
+{
+"code": 48,
+"name": "Kilinochchi"
+},
+{
+"code": 94,
+"name": "Kinniya"
+},
+{
+"code": 237,
+"name": "Kiribathgoda"
+},
+{
+"code": 266,
+"name": "Kiriella"
+},
+{
+"code": 202,
+"name": "Kirindiwela"
+},
+{
+"code": 319,
+"name": "Kirulapana"
+},
+{
+"code": 281,
+"name": "Kobeigane"
+},
+{
+"code": 142,
+"name": "Kochchikade"
+},
+{
+"code": 329,
+"name": "Koggala"
+},
+{
+"code": 342,
+"name": "Kokkaddicholai"
+},
+{
+"code": 210,
+"name": "Kollupitiya Co-op House"
+},
+{
+"code": 194,
+"name": "Kolonnawa"
+},
+{
+"code": 260,
+"name": "Koslanda"
+},
+{
+"code": 308,
+"name": "Kotahena"
+},
+{
+"code": 98,
+"name": "Kotikawatte"
+},
+{
+"code": 355,
+"name": "Kotiyakumbura"
+},
+{
+"code": 328,
+"name": "Kottawa"
+},
+{
+"code": 288,
+"name": "Kudawella"
+},
+{
+"code": 28,
+"name": "Kuliyapitiya"
+},
+{
+"code": 12,
+"name": "Kurunegala"
+},
+{
+"code": 226,
+"name": "Kurunegala Maliyadeva"
+},
+{
+"code": 334,
+"name": "Kurunegala-Ethugalpura"
+},
+{
+"code": 263,
+"name": "Kuruwita"
+},
+{
+"code": 309,
+"name": "Liberty Plaza"
+},
+{
+"code": 331,
+"name": "Lucky Plaza"
+},
+{
+"code": 251,
+"name": "Lunugala"
+},
+{
+"code": 215,
+"name": "Madampe"
+},
+{
+"code": 282,
+"name": "Maggona"
+},
+{
+"code": 181,
+"name": "Maha – Oya"
+},
+{
+"code": 217,
+"name": "Mahara"
+},
+{
+"code": 306,
+"name": "Maharagama"
+},
+{
+"code": 303,
+"name": "Mahawewa"
+},
+{
+"code": 58,
+"name": "Mahiyangana"
+},
+{
+"code": 52,
+"name": "Maho"
+},
+{
+"code": 200,
+"name": "Majestic City"
+},
+{
+"code": 137,
+"name": "Makandura"
+},
+{
+"code": 191,
+"name": "Malwana"
+},
+{
+"code": 312,
+"name": "Malwatta Road"
+},
+{
+"code": 165,
+"name": "Mankulam"
+},
+{
+"code": 44,
+"name": "Mannar"
+},
+{
+"code": 236,
+"name": "Maradana"
+},
+{
+"code": 100,
+"name": "Marandagahamula"
+},
+{
+"code": 322,
+"name": "Marawila"
+},
+{
+"code": 346,
+"name": "Maruthamunai"
+},
+{
+"code": 178,
+"name": "Maskeliya"
+},
+{
+"code": 2,
+"name": "Matale"
+},
+{
+"code": 152,
+"name": "Matara Dharmapala Mawatha"
+},
+{
+"code": 32,
+"name": "Matara Uyanwatta"
+},
+{
+"code": 70,
+"name": "Mathugama"
+},
+{
+"code": 69,
+"name": "Mawanella"
+},
+{
+"code": 199,
+"name": "Mawathagama"
+},
+{
+"code": 258,
+"name": "Medagama"
+},
+{
+"code": 96,
+"name": "Medawachchiya"
+},
+{
+"code": 231,
+"name": "Medirigiriya"
+},
+{
+"code": 246,
+"name": "Meegalewa"
+},
+{
+"code": 344,
+"name": "Melsiripura"
+},
+{
+"code": 157,
+"name": "Menikhinna"
+},
+{
+"code": 176,
+"name": "Mid City"
+},
+{
+"code": 265,
+"name": "Middeniya"
+},
+{
+"code": 21,
+"name": "Minuwangoda"
+},
+{
+"code": 198,
+"name": "Mirigama"
+},
+{
+"code": 68,
+"name": "Monaragala"
+},
+{
+"code": 290,
+"name": "Moratumulla"
+},
+{
+"code": 91,
+"name": "Moratuwa"
+},
+{
+"code": 60,
+"name": "Morawaka"
+},
+{
+"code": 336,
+"name": "Mount Lavinia"
+},
+{
+"code": 46,
+"name": "Mudalige Mawatha"
+},
+{
+"code": 20,
+"name": "Mulativu"
+},
+{
+"code": 166,
+"name": "Murunkan"
+},
+{
+"code": 95,
+"name": "Muttur"
+},
+{
+"code": 214,
+"name": "Mutuwal"
+},
+{
+"code": 119,
+"name": "Narahenpita"
+},
+{
+"code": 82,
+"name": "Narammala"
+},
+{
+"code": 83,
+"name": "Nattandiya"
+},
+{
+"code": 146,
+"name": "Naula"
+},
+{
+"code": 53,
+"name": "Nawalapitiya"
+},
+{
+"code": 249,
+"name": "Neboda"
+},
+{
+"code": 34,
+"name": "Negombo"
+},
+{
+"code": 106,
+"name": "Nelliady"
+},
+{
+"code": 124,
+"name": "Nikeweratiya"
+},
+{
+"code": 127,
+"name": "Nildandahinna."
+},
+{
+"code": 296,
+"name": "Nintavur"
+},
+{
+"code": 278,
+"name": "Nittambuwa"
+},
+{
+"code": 192,
+"name": "Nivitigala"
+},
+{
+"code": 171,
+"name": "Nochchiyagama"
+},
+{
+"code": 174,
+"name": "Nugegoda"
+},
+{
+"code": 335,
+"name": "Nugegoda City"
+},
+{
+"code": 134,
+"name": "Nuwara Eliya"
+},
+{
+"code": 340,
+"name": "Oddamavady"
+},
+{
+"code": 275,
+"name": "Olcott Mawatha"
+},
+{
+"code": 796,
+"name": "Overseas Customers Unit"
+},
+{
+"code": 43,
+"name": "Padaviya"
+},
+{
+"code": 349,
+"name": "Pallebedda"
+},
+{
+"code": 241,
+"name": "Pallepola"
+},
+{
+"code": 318,
+"name": "Pamunugama"
+},
+{
+"code": 148,
+"name": "Panadura"
+},
+{
+"code": 321,
+"name": "Panadura Town"
+},
+{
+"code": 211,
+"name": "Panwila"
+},
+{
+"code": 111,
+"name": "Paranthan"
+},
+{
+"code": 116,
+"name": "Passara"
+},
+{
+"code": 261,
+"name": "Pelawatte"
+},
+{
+"code": 160,
+"name": "Pelmadulla"
+},
+{
+"code": 57,
+"name": "Peradeniya"
+},
+{
+"code": 139,
+"name": "Pettah"
+},
+{
+"code": 256,
+"name": "Pilimatalawa"
+},
+{
+"code": 103,
+"name": "Piliyandala"
+},
+{
+"code": 359,
+"name": "Piliyandala City"
+},
+{
+"code": 279,
+"name": "Pitakotte"
+},
+{
+"code": 285,
+"name": "Point Pedro"
+},
+{
+"code": 59,
+"name": "Polgahawela"
+},
+{
+"code": 5,
+"name": "Polonnaruwa"
+},
+{
+"code": 232,
+"name": "Polonnaruwa Town"
+},
+{
+"code": 360,
+"name": "Polpithigama"
+},
+{
+"code": 358,
+"name": "Poojapitiya"
+},
+{
+"code": 280,
+"name": "Pothuhera"
+},
+{
+"code": 164,
+"name": "Potuvil"
+},
+{
+"code": 93,
+"name": "Pugoda"
+},
+{
+"code": 352,
+"name": "Pulmudai"
+},
+{
+"code": 173,
+"name": "Pundaluoya"
+},
+{
+"code": 274,
+"name": "Pussellawa"
+},
+{
+"code": 9,
+"name": "Puttalam"
+},
+{
+"code": 33,
+"name": "Queens"
+},
+{
+"code": 36,
+"name": "Ragala"
+},
+{
+"code": 316,
+"name": "Ragama"
+},
+{
+"code": 129,
+"name": "Rakwana"
+},
+{
+"code": 101,
+"name": "Rambukkana"
+},
+{
+"code": 345,
+"name": "Ranna"
+},
+{
+"code": 80,
+"name": "Ratmalana"
+},
+{
+"code": 88,
+"name": "Ratnapura"
+},
+{
+"code": 317,
+"name": "Ratnapura Town"
+},
+{
+"code": 128,
+"name": "Ratthota"
+},
+{
+"code": 193,
+"name": "Ridigama"
+},
+{
+"code": 353,
+"name": "Rikillagaskada"
+},
+{
+"code": 81,
+"name": "Ruwanwella"
+},
+{
+"code": 338,
+"name": "Sainthamaruthu"
+},
+{
+"code": 64,
+"name": "Samanthurai"
+},
+{
+"code": 277,
+"name": "Sea Street"
+},
+{
+"code": 324,
+"name": "Seeduwa"
+},
+{
+"code": 158,
+"name": "Senkadagala"
+},
+{
+"code": 233,
+"name": "Serunuwara"
+},
+{
+"code": 56,
+"name": "Sri Sangaraja Mawatha"
+},
+{
+"code": 143,
+"name": "Suduwella"
+},
+{
+"code": 264,
+"name": "Suriyawewa"
+},
+{
+"code": 315,
+"name": "Talawa"
+},
+{
+"code": 38,
+"name": "Talawakele"
+},
+{
+"code": 272,
+"name": "Talgaswela"
+},
+{
+"code": 219,
+"name": "Tambuttegama"
+},
+{
+"code": 230,
+"name": "Tanamalwila"
+},
+{
+"code": 67,
+"name": "Tangalle"
+},
+{
+"code": 112,
+"name": "Teldeniya"
+},
+{
+"code": 351,
+"name": "Thambala"
+},
+{
+"code": 86,
+"name": "Thimbirigasyaya"
+},
+{
+"code": 224,
+"name": "Thirukkovil"
+},
+{
+"code": 270,
+"name": "Thulhiriya"
+},
+{
+"code": 61,
+"name": "Tissamaharama"
+},
+{
+"code": 167,
+"name": "Town Hall, Colombo"
+},
+{
+"code": 66,
+"name": "Trincomalee"
+},
+{
+"code": 255,
+"name": "Trincomalee Town"
+},
+{
+"code": 292,
+"name": "Udapussellawa"
+},
+{
+"code": 295,
+"name": "Udawalawe"
+},
+{
+"code": 131,
+"name": "Udugama"
+},
+{
+"code": 189,
+"name": "Uhana"
+},
+{
+"code": 201,
+"name": "Ukuwela"
+},
+{
+"code": 14,
+"name": "Union Place"
+},
+{
+"code": 197,
+"name": "Uragasmanhandiya"
+},
+{
+"code": 271,
+"name": "Urubokka"
+},
+{
+"code": 156,
+"name": "Uva-Paranagama"
+},
+{
+"code": 102,
+"name": "Valaichechenai"
+},
+{
+"code": 40,
+"name": "Vavuniya"
+},
+{
+"code": 141,
+"name": "Velvetiturai"
+},
+{
+"code": 79,
+"name": "Veyangoda"
+},
+{
+"code": 262,
+"name": "Wadduwa"
+},
+{
+"code": 304,
+"name": "Walasgala"
+},
+{
+"code": 120,
+"name": "Walasmulla"
+},
+{
+"code": 325,
+"name": "Wanduramba"
+},
+{
+"code": 54,
+"name": "Warakapola"
+},
+{
+"code": 163,
+"name": "Wariyapola"
+},
+{
+"code": 222,
+"name": "Wattala"
+},
+{
+"code": 74,
+"name": "Wattegama"
+},
+{
+"code": 350,
+"name": "Weeraketiya"
+},
+{
+"code": 77,
+"name": "Weligama"
+},
+{
+"code": 254,
+"name": "Welikanda"
+},
+{
+"code": 16,
+"name": "Welimada"
+},
+{
+"code": 145,
+"name": "Wellawatte"
+},
+{
+"code": 62,
+"name": "Wellawaya"
+},
+{
+"code": 76,
+"name": "Wennappuwa"
+},
+{
+"code": 122,
+"name": "Wilgamuwa"
+},
+{
+"code": 333,
+"name": "Yakkala"
+},
+{
+"code": 47,
+"name": "Yatiyantota"
+}
+]
+},
+{
+"id": 12,
+"name": "Regional Development Bank",
+"bankCode": 7755,
+"type": "government",
+"swift": "RDBKLKLCO",
+"phone": "+94 11 2304728",
+"address": "Colombo",
+"email": "",
+"website": "https://www.rdb.lk",
+"branches": [
+{
+"code": 103,
+"name": "Agalawatte"
+},
+{
+"code": 617,
+"name": "Agarapathana"
+},
+{
+"code": 243,
+"name": "Ahangama"
+},
+{
+"code": 805,
+"name": "Akkaraipaththu"
+},
+{
+"code": 222,
+"name": "Akmeemana"
+},
+{
+"code": 204,
+"name": "Akuressa"
+},
+{
+"code": 304,
+"name": "Alawwa"
+},
+{
+"code": 208,
+"name": "Ambalantota"
+},
+{
+"code": 331,
+"name": "Ambanpola"
+},
+{
+"code": 801,
+"name": "Ampara"
+},
+{
+"code": 315,
+"name": "Anamaduwa"
+},
+{
+"code": 209,
+"name": "Angunukolapalassa"
+},
+{
+"code": 423,
+"name": "Aralaganwila"
+},
+{
+"code": 506,
+"name": "Aranayaka"
+},
+{
+"code": 127,
+"name": "Awissawella"
+},
+{
+"code": 711,
+"name": "Badalkumbura"
+},
+{
+"code": 217,
+"name": "Baddegama"
+},
+{
+"code": 705,
+"name": "Badulla"
+},
+{
+"code": 114,
+"name": "Baduraliya"
+},
+{
+"code": 414,
+"name": "Bakamoona"
+},
+{
+"code": 514,
+"name": "Balangoda"
+},
+{
+"code": 249,
+"name": "Balapitiya"
+},
+{
+"code": 715,
+"name": "Bandarawela"
+},
+{
+"code": 240,
+"name": "Barawakumbuka"
+},
+{
+"code": 213,
+"name": "Batapola"
+},
+{
+"code": 811,
+"name": "Batticaloa"
+},
+{
+"code": 211,
+"name": "Beliatta"
+},
+{
+"code": 107,
+"name": "Beruwala"
+},
+{
+"code": 721,
+"name": "Bibile"
+},
+{
+"code": 720,
+"name": "Bogahakumbura"
+},
+{
+"code": 907,
+"name": "Bogaswewa"
+},
+{
+"code": 328,
+"name": "Bowatte"
+},
+{
+"code": 510,
+"name": "Bulathkohupitiya"
+},
+{
+"code": 101,
+"name": "Bulathsinghala"
+},
+{
+"code": 701,
+"name": "Buttala"
+},
+{
+"code": 813,
+"name": "Chenkalady"
+},
+{
+"code": 313,
+"name": "Chilaw"
+},
+{
+"code": 904,
+"name": "Chunnakam"
+},
+{
+"code": 233,
+"name": "City – Matara"
+},
+{
+"code": 620,
+"name": "Dambulla"
+},
+{
+"code": 605,
+"name": "Danture"
+},
+{
+"code": 627,
+"name": "Daulagala"
+},
+{
+"code": 802,
+"name": "Dehiatthakandiya"
+},
+{
+"code": 529,
+"name": "Dehiovita"
+},
+{
+"code": 203,
+"name": "Deiyandara"
+},
+{
+"code": 226,
+"name": "Deniyaya"
+},
+{
+"code": 511,
+"name": "Deraniyagala"
+},
+{
+"code": 254,
+"name": "Devinuwara"
+},
+{
+"code": 509,
+"name": "Dewalegama"
+},
+{
+"code": 247,
+"name": "Dikwella"
+},
+{
+"code": 298,
+"name": "District Office – Galle"
+},
+{
+"code": 297,
+"name": "District Office – Hambantota"
+},
+{
+"code": 299,
+"name": "District Office – Matara"
+},
+{
+"code": 123,
+"name": "Divulapitiya"
+},
+{
+"code": 724,
+"name": "Diyathalawa"
+},
+{
+"code": 112,
+"name": "Dodangoda"
+},
+{
+"code": 498,
+"name": "Dritrict Office Polonnaruwa"
+},
+{
+"code": 305,
+"name": "Dummalasooriya"
+},
+{
+"code": 424,
+"name": "Economic Centre"
+},
+{
+"code": 518,
+"name": "Eheliyagoda"
+},
+{
+"code": 212,
+"name": "Elpitiya"
+},
+{
+"code": 515,
+"name": "Embilipitiya"
+},
+{
+"code": 523,
+"name": "Erathna"
+},
+{
+"code": 812,
+"name": "Eraur"
+},
+{
+"code": 418,
+"name": "Galamuna"
+},
+{
+"code": 415,
+"name": "Galenbindunuwewa"
+},
+{
+"code": 621,
+"name": "Galewela"
+},
+{
+"code": 312,
+"name": "Galgamuwa"
+},
+{
+"code": 228,
+"name": "Galle"
+},
+{
+"code": 405,
+"name": "Galnewa"
+},
+{
+"code": 116,
+"name": "Gampaha"
+},
+{
+"code": 198,
+"name": "Gampaha District Office"
+},
+{
+"code": 601,
+"name": "Gampola"
+},
+{
+"code": 206,
+"name": "Gandara"
+},
+{
+"code": 613,
+"name": "Ginigathena"
+},
+{
+"code": 719,
+"name": "Girandurukotte"
+},
+{
+"code": 320,
+"name": "Giriulla"
+},
+{
+"code": 522,
+"name": "Godakawela"
+},
+{
+"code": 215,
+"name": "Gonagalapura"
+},
+{
+"code": 416,
+"name": "Gonapathirawa"
+},
+{
+"code": 105,
+"name": "Goonapola"
+},
+{
+"code": 201,
+"name": "Hakmana"
+},
+{
+"code": 718,
+"name": "Haldummulla"
+},
+{
+"code": 238,
+"name": "Hambantota"
+},
+{
+"code": 626,
+"name": "Hanguranketha"
+},
+{
+"code": 712,
+"name": "Haputhale"
+},
+{
+"code": 603,
+"name": "Hataraliyadda"
+},
+{
+"code": 1,
+"name": "Head Office"
+},
+{
+"code": 630,
+"name": "Hedeniya"
+},
+{
+"code": 516,
+"name": "Hemmathagama"
+},
+{
+"code": 244,
+"name": "Hikkaduwa"
+},
+{
+"code": 413,
+"name": "Hingurakgoda"
+},
+{
+"code": 804,
+"name": "Hingurana"
+},
+{
+"code": 125,
+"name": "Homagama"
+},
+{
+"code": 109,
+"name": "Horana"
+},
+{
+"code": 329,
+"name": "HQB"
+},
+{
+"code": 321,
+"name": "Ibbagamuwa"
+},
+{
+"code": 216,
+"name": "Imaduwa"
+},
+{
+"code": 111,
+"name": "Ingiriya"
+},
+{
+"code": 905,
+"name": "Jaffna"
+},
+{
+"code": 132,
+"name": "J-Ela"
+},
+{
+"code": 421,
+"name": "Kaduruwela"
+},
+{
+"code": 404,
+"name": "Kahatagasdigiliya"
+},
+{
+"code": 526,
+"name": "Kahawatta"
+},
+{
+"code": 818,
+"name": "Kalauwanchikudi"
+},
+{
+"code": 520,
+"name": "Kalawana"
+},
+{
+"code": 806,
+"name": "Kalmunai"
+},
+{
+"code": 115,
+"name": "Kalutara"
+},
+{
+"code": 199,
+"name": "Kalutara District Office"
+},
+{
+"code": 252,
+"name": "Kaluwella"
+},
+{
+"code": 225,
+"name": "Kamburugamuwa"
+},
+{
+"code": 227,
+"name": "Kamburupitiya"
+},
+{
+"code": 902,
+"name": "Kanagarayankulam"
+},
+{
+"code": 708,
+"name": "Kandaketiya"
+},
+{
+"code": 632,
+"name": "Kandy"
+},
+{
+"code": 612,
+"name": "Kandy Marketing Centre"
+},
+{
+"code": 814,
+"name": "Kanthale"
+},
+{
+"code": 223,
+"name": "Karandeniya"
+},
+{
+"code": 248,
+"name": "Karapitiya"
+},
+{
+"code": 816,
+"name": "Kathankudi"
+},
+{
+"code": 615,
+"name": "Katugastota"
+},
+{
+"code": 210,
+"name": "Katuwana"
+},
+{
+"code": 501,
+"name": "Kegalle"
+},
+{
+"code": 599,
+"name": "Kegalle District Office"
+},
+{
+"code": 207,
+"name": "Kekanadura"
+},
+{
+"code": 422,
+"name": "Kekirawa"
+},
+{
+"code": 134,
+"name": "Kelaniya – Head Quarter"
+},
+{
+"code": 906,
+"name": "Kilinochchi"
+},
+{
+"code": 530,
+"name": "Kiriella"
+},
+{
+"code": 317,
+"name": "Kirimetiyana"
+},
+{
+"code": 245,
+"name": "Kirinda"
+},
+{
+"code": 131,
+"name": "Kirindiwela"
+},
+{
+"code": 507,
+"name": "Kithulgala"
+},
+{
+"code": 819,
+"name": "Kokkadichcholai"
+},
+{
+"code": 517,
+"name": "Kolonna"
+},
+{
+"code": 126,
+"name": "Kolonnawa"
+},
+{
+"code": 624,
+"name": "Kotagala"
+},
+{
+"code": 527,
+"name": "Kotiyakumbura"
+},
+{
+"code": 301,
+"name": "Kuliyapitiya"
+},
+{
+"code": 311,
+"name": "Kurunegala"
+},
+{
+"code": 399,
+"name": "Kurunegala District Office"
+},
+{
+"code": 524,
+"name": "Kuruwita"
+},
+{
+"code": 622,
+"name": "Laggala"
+},
+{
+"code": 717,
+"name": "Lunugala"
+},
+{
+"code": 219,
+"name": "Lunugamwehera"
+},
+{
+"code": 726,
+"name": "Madulla"
+},
+{
+"code": 807,
+"name": "Mahaoya"
+},
+{
+"code": 325,
+"name": "Mahawewa"
+},
+{
+"code": 709,
+"name": "Mahiyanganaya"
+},
+{
+"code": 319,
+"name": "Maho"
+},
+{
+"code": 324,
+"name": "Mampuri"
+},
+{
+"code": 417,
+"name": "Manampitiya"
+},
+{
+"code": 903,
+"name": "Mannar"
+},
+{
+"code": 604,
+"name": "Marassana"
+},
+{
+"code": 619,
+"name": "Matale"
+},
+{
+"code": 121,
+"name": "Mathugama"
+},
+{
+"code": 504,
+"name": "Mawanella"
+},
+{
+"code": 236,
+"name": "Mawarala"
+},
+{
+"code": 117,
+"name": "Mawaramandiya"
+},
+{
+"code": 309,
+"name": "Mawathagama"
+},
+{
+"code": 702,
+"name": "Medagama"
+},
+{
+"code": 407,
+"name": "Medawachchiya"
+},
+{
+"code": 411,
+"name": "Medirigiriya"
+},
+{
+"code": 716,
+"name": "Meegahakiula"
+},
+{
+"code": 113,
+"name": "Meegahathenna"
+},
+{
+"code": 119,
+"name": "Meerigama"
+},
+{
+"code": 330,
+"name": "Melsiripura"
+},
+{
+"code": 625,
+"name": "Menikhinna"
+},
+{
+"code": 246,
+"name": "Middeniya"
+},
+{
+"code": 401,
+"name": "Mihinthale"
+},
+{
+"code": 104,
+"name": "Millaniya"
+},
+{
+"code": 118,
+"name": "Minuwangoda"
+},
+{
+"code": 251,
+"name": "Mirissa"
+},
+{
+"code": 133,
+"name": "Miriswaththa"
+},
+{
+"code": 703,
+"name": "Monaragala"
+},
+{
+"code": 120,
+"name": "Moragahahena"
+},
+{
+"code": 106,
+"name": "Moranthuduwa"
+},
+{
+"code": 237,
+"name": "Morawaka"
+},
+{
+"code": 607,
+"name": "Morayaya"
+},
+{
+"code": 322,
+"name": "Mundel"
+},
+{
+"code": 820,
+"name": "Muthtur"
+},
+{
+"code": 326,
+"name": "Narammala"
+},
+{
+"code": 316,
+"name": "Nattandiya"
+},
+{
+"code": 628,
+"name": "Naula"
+},
+{
+"code": 323,
+"name": "Nawagattegama"
+},
+{
+"code": 629,
+"name": "Nawalapitiya"
+},
+{
+"code": 122,
+"name": "Negombo"
+},
+{
+"code": 519,
+"name": "Nelumdeniya"
+},
+{
+"code": 235,
+"name": "Neluwa"
+},
+{
+"code": 419,
+"name": "New Town – Anuradhapura"
+},
+{
+"code": 307,
+"name": "Nikaweratiya"
+},
+{
+"code": 616,
+"name": "Nildandahinna"
+},
+{
+"code": 810,
+"name": "Nintavur"
+},
+{
+"code": 124,
+"name": "Nittambuwa"
+},
+{
+"code": 525,
+"name": "Nivithigala"
+},
+{
+"code": 610,
+"name": "Nuwara Eliya"
+},
+{
+"code": 314,
+"name": "Palakuda"
+},
+{
+"code": 250,
+"name": "Pamburana"
+},
+{
+"code": 108,
+"name": "Panadura"
+},
+{
+"code": 303,
+"name": "Panduwasnuwara"
+},
+{
+"code": 302,
+"name": "Pannala"
+},
+{
+"code": 706,
+"name": "Passara"
+},
+{
+"code": 513,
+"name": "Pelmadulla"
+},
+{
+"code": 633,
+"name": "Peradeniya"
+},
+{
+"code": 128,
+"name": "Piliyandala"
+},
+{
+"code": 220,
+"name": "Pitabaddera"
+},
+{
+"code": 502,
+"name": "Pitagaldeniya"
+},
+{
+"code": 214,
+"name": "Pitigala"
+},
+{
+"code": 410,
+"name": "Polonnaruwa"
+},
+{
+"code": 327,
+"name": "Polpithigama"
+},
+{
+"code": 614,
+"name": "Poondaluoya"
+},
+{
+"code": 306,
+"name": "Pothuhera"
+},
+{
+"code": 531,
+"name": "Pothupitiya"
+},
+{
+"code": 808,
+"name": "Pothuvil"
+},
+{
+"code": 3,
+"name": "Provincial Office – Central"
+},
+{
+"code": 600,
+"name": "Provincial Office – Central"
+},
+{
+"code": 400,
+"name": "Provincial Office – North Central"
+},
+{
+"code": 500,
+"name": "Provincial Office – Sabaragamuwa"
+},
+{
+"code": 200,
+"name": "Provincial Office – Southern"
+},
+{
+"code": 700,
+"name": "Provincial Office – Uva"
+},
+{
+"code": 100,
+"name": "Provincial Office – Western"
+},
+{
+"code": 609,
+"name": "Pujapitiya"
+},
+{
+"code": 412,
+"name": "Pulasthigama"
+},
+{
+"code": 534,
+"name": "Pulungupitiya"
+},
+{
+"code": 318,
+"name": "Puttlam"
+},
+{
+"code": 398,
+"name": "Puttlam District Office"
+},
+{
+"code": 129,
+"name": "Ragama"
+},
+{
+"code": 528,
+"name": "Rakwana"
+},
+{
+"code": 409,
+"name": "Rambewa"
+},
+{
+"code": 503,
+"name": "Rambukkana"
+},
+{
+"code": 242,
+"name": "Ranna"
+},
+{
+"code": 512,
+"name": "Rathnapura"
+},
+{
+"code": 623,
+"name": "Rattota"
+},
+{
+"code": 308,
+"name": "Rideegama"
+},
+{
+"code": 713,
+"name": "Rideemaliyadda"
+},
+{
+"code": 611,
+"name": "Rikillagaskada"
+},
+{
+"code": 508,
+"name": "Ruwanwella"
+},
+{
+"code": 803,
+"name": "Sammanthurai"
+},
+{
+"code": 332,
+"name": "Santha Anapura"
+},
+{
+"code": 425,
+"name": "Sevanapitiya"
+},
+{
+"code": 725,
+"name": "Sewanagala"
+},
+{
+"code": 420,
+"name": "Siripura"
+},
+{
+"code": 723,
+"name": "Siyambalanduwa"
+},
+{
+"code": 224,
+"name": "Sooriyawewa"
+},
+{
+"code": 533,
+"name": "Sri Palabaddala"
+},
+{
+"code": 234,
+"name": "Tangalle"
+},
+{
+"code": 608,
+"name": "Teldeniya"
+},
+{
+"code": 406,
+"name": "Thalawa"
+},
+{
+"code": 221,
+"name": "Thalgaswala"
+},
+{
+"code": 403,
+"name": "Thambuththegama"
+},
+{
+"code": 704,
+"name": "Thanamalvila"
+},
+{
+"code": 232,
+"name": "Thihagoda"
+},
+{
+"code": 408,
+"name": "Thirappane"
+},
+{
+"code": 218,
+"name": "Tissamaharama"
+},
+{
+"code": 402,
+"name": "Town Branch – Anuradhapura"
+},
+{
+"code": 817,
+"name": "Trincomalee"
+},
+{
+"code": 602,
+"name": "Udawela"
+},
+{
+"code": 618,
+"name": "Ududumbara"
+},
+{
+"code": 241,
+"name": "Udugama"
+},
+{
+"code": 809,
+"name": "Uhana"
+},
+{
+"code": 229,
+"name": "Uragasmanhandiya"
+},
+{
+"code": 202,
+"name": "Urubokka"
+},
+{
+"code": 722,
+"name": "Uva Maligathenna"
+},
+{
+"code": 714,
+"name": "Uvaparanagama"
+},
+{
+"code": 815,
+"name": "Valachenai"
+},
+{
+"code": 901,
+"name": "Vavuniya"
+},
+{
+"code": 130,
+"name": "Wadduwa"
+},
+{
+"code": 102,
+"name": "Walagedara"
+},
+{
+"code": 239,
+"name": "Walasmulla"
+},
+{
+"code": 110,
+"name": "Warakagoda"
+},
+{
+"code": 505,
+"name": "Warakapola"
+},
+{
+"code": 253,
+"name": "Warapitiya"
+},
+{
+"code": 310,
+"name": "Wariyapola"
+},
+{
+"code": 606,
+"name": "Wattegama"
+},
+{
+"code": 300,
+"name": "Wayamba Provincial Office"
+},
+{
+"code": 231,
+"name": "Weerakatiya"
+},
+{
+"code": 205,
+"name": "Weligama"
+},
+{
+"code": 532,
+"name": "Weligepola"
+},
+{
+"code": 707,
+"name": "Welimada"
+},
+{
+"code": 710,
+"name": "wellawaya"
+},
+{
+"code": 631,
+"name": "Wilgamuwa"
+},
+{
+"code": 230,
+"name": "Yakkalamulla"
+},
+{
+"code": 521,
+"name": "Yatiyantota"
+}
+]
+},
+{
+"id": 13,
+"name": "Sampath Bank PLC",
+"bankCode": 7278,
+"type": "commercial",
+"swift": "BSAMKLCO",
+"phone": "+94 11 2303050",
+"address": "Sir James Peiris Mawatha, Colombo 02",
+"email": "info@sampath.lk",
+"website": "https://www.sampath.lk",
+"branches": [
+{
+"code": 139,
+"name": "2nd Branch Batticaloa"
+},
+{
+"code": 182,
+"name": "Ahangama"
+},
+{
+"code": 111,
+"name": "Akkaraipattu"
+},
+{
+"code": 179,
+"name": "Akuressa"
+},
+{
+"code": 53,
+"name": "Alawwa PBC"
+},
+{
+"code": 79,
+"name": "Aluthgama"
+},
+{
+"code": 104,
+"name": "Ambalantota"
+},
+{
+"code": 72,
+"name": "Ambalongoda"
+},
+{
+"code": 62,
+"name": "Ampara"
+},
+{
+"code": 143,
+"name": "Anamabuwa"
+},
+{
+"code": 168,
+"name": "Anuradhapura New Town"
+},
+{
+"code": 21,
+"name": "Anuradhapura Super Branch"
+},
+{
+"code": 154,
+"name": "Aralangawila"
+},
+{
+"code": 67,
+"name": "Athurugiriya PBC"
+},
+{
+"code": 89,
+"name": "Attidiya"
+},
+{
+"code": 22,
+"name": "Avissawella"
+},
+{
+"code": 118,
+"name": "Baddegama"
+},
+{
+"code": 93,
+"name": "Badulla"
+},
+{
+"code": 97,
+"name": "Balangoda"
+},
+{
+"code": 11,
+"name": "Bambalapitiya"
+},
+{
+"code": 59,
+"name": "Bandaragama"
+},
+{
+"code": 46,
+"name": "Bandarawela"
+},
+{
+"code": 61,
+"name": "Battaramulla"
+},
+{
+"code": 107,
+"name": "Batticaloa"
+},
+{
+"code": 180,
+"name": "Beliatta"
+},
+{
+"code": 161,
+"name": "Bibile"
+},
+{
+"code": 142,
+"name": "Boralesgamuwa"
+},
+{
+"code": 4,
+"name": "Borella"
+},
+{
+"code": 218,
+"name": "Borella Super"
+},
+{
+"code": 145,
+"name": "Buttala"
+},
+{
+"code": 996,
+"name": "Card Centre"
+},
+{
+"code": 993,
+"name": "Central Clearing Department"
+},
+{
+"code": 164,
+"name": "Chankanai"
+},
+{
+"code": 169,
+"name": "Chavakachcheri"
+},
+{
+"code": 121,
+"name": "Chenkalady"
+},
+{
+"code": 108,
+"name": "Chilaw"
+},
+{
+"code": 128,
+"name": "Chunnakam"
+},
+{
+"code": 1,
+"name": "City Office"
+},
+{
+"code": 175,
+"name": "Colombo Super"
+},
+{
+"code": 90,
+"name": "Dambulla"
+},
+{
+"code": 196,
+"name": "Dankotuwa"
+},
+{
+"code": 167,
+"name": "Dehiattakandiya"
+},
+{
+"code": 17,
+"name": "Dehiwala"
+},
+{
+"code": 202,
+"name": "Delgoda"
+},
+{
+"code": 14,
+"name": "Deniyaya"
+},
+{
+"code": 49,
+"name": "Deraniyagala PBC"
+},
+{
+"code": 216,
+"name": "Dickwella"
+},
+{
+"code": 85,
+"name": "Digana PBC"
+},
+{
+"code": 198,
+"name": "Divulapitiya"
+},
+{
+"code": 20,
+"name": "Eheliyagoda"
+},
+{
+"code": 204,
+"name": "Elpitiya"
+},
+{
+"code": 43,
+"name": "Embilipitiya"
+},
+{
+"code": 114,
+"name": "Embuldeniya"
+},
+{
+"code": 12,
+"name": "Fort"
+},
+{
+"code": 190,
+"name": "Galewela"
+},
+{
+"code": 35,
+"name": "Galle"
+},
+{
+"code": 159,
+"name": "Galle Bazaar"
+},
+{
+"code": 16,
+"name": "Gampaha"
+},
+{
+"code": 212,
+"name": "Gampaha Super"
+},
+{
+"code": 101,
+"name": "Gampola"
+},
+{
+"code": 78,
+"name": "Ganemulla PBC"
+},
+{
+"code": 135,
+"name": "Gangodawila"
+},
+{
+"code": 95,
+"name": "Giriulla"
+},
+{
+"code": 225,
+"name": "Godakawela"
+},
+{
+"code": 173,
+"name": "Gothatuwa New Town"
+},
+{
+"code": 127,
+"name": "Grandpass"
+},
+{
+"code": 70,
+"name": "Gregorys Road PBC"
+},
+{
+"code": 181,
+"name": "Habaraduwa"
+},
+{
+"code": 137,
+"name": "Hanwella"
+},
+{
+"code": 58,
+"name": "Harbour-View PBC"
+},
+{
+"code": 80,
+"name": "Hatton"
+},
+{
+"code": 999,
+"name": "Head Office"
+},
+{
+"code": 29,
+"name": "Headquarters"
+},
+{
+"code": 220,
+"name": "Heerassagala"
+},
+{
+"code": 96,
+"name": "Hendala"
+},
+{
+"code": 187,
+"name": "Hettipola"
+},
+{
+"code": 229,
+"name": "Hikkaduwa"
+},
+{
+"code": 110,
+"name": "Hingurakgoda"
+},
+{
+"code": 69,
+"name": "Homagama"
+},
+{
+"code": 57,
+"name": "Horana"
+},
+{
+"code": 140,
+"name": "Ingiriya"
+},
+{
+"code": 98,
+"name": "Ja-Ela"
+},
+{
+"code": 120,
+"name": "Jaffna"
+},
+{
+"code": 206,
+"name": "Kaburupitiya"
+},
+{
+"code": 60,
+"name": "Kadawatha"
+},
+{
+"code": 38,
+"name": "Kaduruwela"
+},
+{
+"code": 162,
+"name": "Kaduwela"
+},
+{
+"code": 203,
+"name": "Kahatagasdigiliya"
+},
+{
+"code": 41,
+"name": "Kalawana"
+},
+{
+"code": 112,
+"name": "Kalmunai"
+},
+{
+"code": 50,
+"name": "Kalutara"
+},
+{
+"code": 125,
+"name": "Kaluwanchikudy"
+},
+{
+"code": 76,
+"name": "Kandana"
+},
+{
+"code": 123,
+"name": "Kandy City Centre"
+},
+{
+"code": 100,
+"name": "Kandy Metro"
+},
+{
+"code": 7,
+"name": "Kandy Super"
+},
+{
+"code": 172,
+"name": "Kantale"
+},
+{
+"code": 210,
+"name": "Karagampitiya"
+},
+{
+"code": 141,
+"name": "Karapitiya"
+},
+{
+"code": 115,
+"name": "Kattankudy"
+},
+{
+"code": 32,
+"name": "Katugastota"
+},
+{
+"code": 171,
+"name": "Kayts"
+},
+{
+"code": 64,
+"name": "Kegall"
+},
+{
+"code": 149,
+"name": "Kekirawa"
+},
+{
+"code": 227,
+"name": "Kelaniya"
+},
+{
+"code": 224,
+"name": "Kesbewa"
+},
+{
+"code": 151,
+"name": "Keselwatta"
+},
+{
+"code": 148,
+"name": "Kilinochchi"
+},
+{
+"code": 177,
+"name": "Kinniya"
+},
+{
+"code": 5,
+"name": "Kiribathgoda"
+},
+{
+"code": 200,
+"name": "Kiribathgoda"
+},
+{
+"code": 83,
+"name": "Kirindiwela PBC"
+},
+{
+"code": 117,
+"name": "Kirulapone"
+},
+{
+"code": 165,
+"name": "Kochchikade"
+},
+{
+"code": 94,
+"name": "Kohuwela"
+},
+{
+"code": 134,
+"name": "Kollupitiya"
+},
+{
+"code": 37,
+"name": "Kotahena"
+},
+{
+"code": 52,
+"name": "Kottawa"
+},
+{
+"code": 23,
+"name": "Kuliyapitiya"
+},
+{
+"code": 133,
+"name": "Kundasale"
+},
+{
+"code": 6,
+"name": "Kurunegala"
+},
+{
+"code": 215,
+"name": "Kurunegala Metro"
+},
+{
+"code": 189,
+"name": "Madampe"
+},
+{
+"code": 13,
+"name": "Maharagama"
+},
+{
+"code": 92,
+"name": "Maharagama Super"
+},
+{
+"code": 56,
+"name": "Mahiyanganaya"
+},
+{
+"code": 197,
+"name": "Maho"
+},
+{
+"code": 42,
+"name": "Main Street"
+},
+{
+"code": 207,
+"name": "Makola"
+},
+{
+"code": 39,
+"name": "Malabe"
+},
+{
+"code": 174,
+"name": "Mallavi"
+},
+{
+"code": 147,
+"name": "Manipay"
+},
+{
+"code": 119,
+"name": "Mannar"
+},
+{
+"code": 144,
+"name": "Maradana"
+},
+{
+"code": 183,
+"name": "Marandagahamula"
+},
+{
+"code": 194,
+"name": "Marawila"
+},
+{
+"code": 25,
+"name": "Matale"
+},
+{
+"code": 10,
+"name": "Matara"
+},
+{
+"code": 153,
+"name": "Matara Bazaar"
+},
+{
+"code": 176,
+"name": "Mattegoda"
+},
+{
+"code": 106,
+"name": "Matugama"
+},
+{
+"code": 160,
+"name": "Mawanella"
+},
+{
+"code": 109,
+"name": "Mawathagama"
+},
+{
+"code": 184,
+"name": "Menikhinna"
+},
+{
+"code": 158,
+"name": "Middeniya"
+},
+{
+"code": 65,
+"name": "Minuwangoda"
+},
+{
+"code": 86,
+"name": "Mirigama"
+},
+{
+"code": 74,
+"name": "Monaragala"
+},
+{
+"code": 155,
+"name": "Moratumulla"
+},
+{
+"code": 31,
+"name": "Moratuwa"
+},
+{
+"code": 15,
+"name": "Morawaka"
+},
+{
+"code": 199,
+"name": "Mount Lavinia"
+},
+{
+"code": 208,
+"name": "Muttur"
+},
+{
+"code": 193,
+"name": "Mutwal"
+},
+{
+"code": 40,
+"name": "Narahenpita"
+},
+{
+"code": 99,
+"name": "Narammala"
+},
+{
+"code": 132,
+"name": "Nattandiya"
+},
+{
+"code": 82,
+"name": "Nawala"
+},
+{
+"code": 223,
+"name": "Nawala Koswatta"
+},
+{
+"code": 195,
+"name": "Nawalapitiya"
+},
+{
+"code": 9,
+"name": "Nawam Mawatha"
+},
+{
+"code": 24,
+"name": "Negombo"
+},
+{
+"code": 88,
+"name": "Negombo 2nd"
+},
+{
+"code": 129,
+"name": "Nelliady"
+},
+{
+"code": 54,
+"name": "Neluwa PBC"
+},
+{
+"code": 102,
+"name": "Nikaweratiya"
+},
+{
+"code": 185,
+"name": "Ninthavur"
+},
+{
+"code": 71,
+"name": "Nittambuwa"
+},
+{
+"code": 138,
+"name": "Nochchiyagama"
+},
+{
+"code": 3,
+"name": "Nugegoda"
+},
+{
+"code": 84,
+"name": "Nuwara Eliya"
+},
+{
+"code": 124,
+"name": "Oddamavady"
+},
+{
+"code": 27,
+"name": "Old Moor Street"
+},
+{
+"code": 214,
+"name": "Orugodawatte"
+},
+{
+"code": 192,
+"name": "Padukka"
+},
+{
+"code": 26,
+"name": "Panadura"
+},
+{
+"code": 47,
+"name": "Panadura Wekada"
+},
+{
+"code": 191,
+"name": "Panchikawatte"
+},
+{
+"code": 166,
+"name": "Pannala"
+},
+{
+"code": 87,
+"name": "Pannipitiya"
+},
+{
+"code": 146,
+"name": "Passara"
+},
+{
+"code": 63,
+"name": "Pelawatte PBC"
+},
+{
+"code": 136,
+"name": "Peliyagoda"
+},
+{
+"code": 103,
+"name": "Pelmadulla"
+},
+{
+"code": 51,
+"name": "Peradeniya PBC"
+},
+{
+"code": 2,
+"name": "Pettah"
+},
+{
+"code": 150,
+"name": "Pilimatalawa"
+},
+{
+"code": 19,
+"name": "Piliyandala"
+},
+{
+"code": 91,
+"name": "Pitakotte"
+},
+{
+"code": 131,
+"name": "Platinum Plus"
+},
+{
+"code": 228,
+"name": "Polgahawela"
+},
+{
+"code": 221,
+"name": "Poojapitiya"
+},
+{
+"code": 130,
+"name": "Pottuvil"
+},
+{
+"code": 217,
+"name": "Prince Street"
+},
+{
+"code": 152,
+"name": "Pussellawa"
+},
+{
+"code": 156,
+"name": "Puttalam"
+},
+{
+"code": 73,
+"name": "Ragama PBC"
+},
+{
+"code": 122,
+"name": "Rajagiriya"
+},
+{
+"code": 188,
+"name": "Rambukkana"
+},
+{
+"code": 33,
+"name": "Rathnapura"
+},
+{
+"code": 18,
+"name": "Ratmalana"
+},
+{
+"code": 226,
+"name": "Ratnapura"
+},
+{
+"code": 163,
+"name": "Rikillagaskada"
+},
+{
+"code": 201,
+"name": "Ruwanwella"
+},
+{
+"code": 126,
+"name": "Sainthamaruthu"
+},
+{
+"code": 929,
+"name": "Sampath Viswa"
+},
+{
+"code": 213,
+"name": "Seeduwa"
+},
+{
+"code": 157,
+"name": "Sooriyawewa"
+},
+{
+"code": 211,
+"name": "Talahena"
+},
+{
+"code": 116,
+"name": "Tangalle"
+},
+{
+"code": 222,
+"name": "Thalawakele"
+},
+{
+"code": 178,
+"name": "Thalawathugoda"
+},
+{
+"code": 48,
+"name": "Thambuttegama (PBC)"
+},
+{
+"code": 34,
+"name": "Thimbirigasyaya"
+},
+{
+"code": 186,
+"name": "Thirunelvely"
+},
+{
+"code": 28,
+"name": "Tissamaharama"
+},
+{
+"code": 66,
+"name": "Trincomalee"
+},
+{
+"code": 55,
+"name": "Vavunia"
+},
+{
+"code": 170,
+"name": "Vavuniya Metro"
+},
+{
+"code": 77,
+"name": "veyangoda PBC"
+},
+{
+"code": 75,
+"name": "Wadduwa PBC"
+},
+{
+"code": 205,
+"name": "Warakapola"
+},
+{
+"code": 44,
+"name": "Wariyapola (PBC)"
+},
+{
+"code": 8,
+"name": "Wattala"
+},
+{
+"code": 105,
+"name": "Wattegama"
+},
+{
+"code": 209,
+"name": "Weligama"
+},
+{
+"code": 81,
+"name": "Welimada"
+},
+{
+"code": 45,
+"name": "Wellampitiya (PBC)"
+},
+{
+"code": 36,
+"name": "Wellawatte Super"
+},
+{
+"code": 113,
+"name": "Wellawaya"
+},
+{
+"code": 30,
+"name": "Wennappuwa"
+},
+{
+"code": 219,
+"name": "World Trade Center"
+},
+{
+"code": 68,
+"name": "Yakkala PBC"
+}
+]
+},
+{
+"id": 14,
+"name": "SANASA Development Bank",
+"bankCode": 7728,
+"type": "specialized",
+"swift": "SNDBKLCO",
+"phone": "+94 11 2375087",
+"address": "Colombo 03",
+"email": "",
+"website": "https://www.sanasabank.lk",
+"branches": [
+{
+"code": 1,
+"name": "1st Colombo City"
+},
+{
+"code": 74,
+"name": "Akkeripattu"
+},
+{
+"code": 8,
+"name": "Akurassa"
+},
+{
+"code": 80,
+"name": "Aluthgama"
+},
+{
+"code": 30,
+"name": "Ambalangoda"
+},
+{
+"code": 23,
+"name": "Ambalanthota"
+},
+{
+"code": 39,
+"name": "Ampara"
+},
+{
+"code": 50,
+"name": "Anamaduwa"
+},
+{
+"code": 51,
+"name": "Angunakolapalassa"
+},
+{
+"code": 17,
+"name": "Anuradhapura"
+},
+{
+"code": 52,
+"name": "Aralaganvila"
+},
+{
+"code": 44,
+"name": "Badulla"
+},
+{
+"code": 3,
+"name": "Battaramulla"
+},
+{
+"code": 29,
+"name": "Batticaloa"
+},
+{
+"code": 62,
+"name": "Buttala"
+},
+{
+"code": 11,
+"name": "Chilaw"
+},
+{
+"code": 89,
+"name": "Chunnakam"
+},
+{
+"code": 35,
+"name": "Dambulla"
+},
+{
+"code": 58,
+"name": "Dehiattakandiya"
+},
+{
+"code": 86,
+"name": "Dehiwala"
+},
+{
+"code": 49,
+"name": "Deniyaya"
+},
+{
+"code": 57,
+"name": "Deraniyagala"
+},
+{
+"code": 88,
+"name": "Ekala"
+},
+{
+"code": 64,
+"name": "Elpitiya"
+},
+{
+"code": 4,
+"name": "Embilipitiya"
+},
+{
+"code": 53,
+"name": "Galenbidunuwewa"
+},
+{
+"code": 32,
+"name": "Galle"
+},
+{
+"code": 82,
+"name": "Gampaha"
+},
+{
+"code": 48,
+"name": "Gampola"
+},
+{
+"code": 33,
+"name": "Giriulla"
+},
+{
+"code": 76,
+"name": "Hatharaliyadda"
+},
+{
+"code": 77,
+"name": "Hingurna"
+},
+{
+"code": 5,
+"name": "Horana"
+},
+{
+"code": 42,
+"name": "Jaffna"
+},
+{
+"code": 78,
+"name": "Kaduwela"
+},
+{
+"code": 59,
+"name": "Kalawanchikudi"
+},
+{
+"code": 22,
+"name": "Kalmuani"
+},
+{
+"code": 25,
+"name": "Kalutara"
+},
+{
+"code": 10,
+"name": "Kandy"
+},
+{
+"code": 73,
+"name": "Kanthale"
+},
+{
+"code": 7,
+"name": "Karapitiya"
+},
+{
+"code": 67,
+"name": "Katuwana"
+},
+{
+"code": 2,
+"name": "Kegalle"
+},
+{
+"code": 71,
+"name": "Kekirawa"
+},
+{
+"code": 69,
+"name": "Kilinochchi"
+},
+{
+"code": 6,
+"name": "Kiribathgoda"
+},
+{
+"code": 56,
+"name": "Kirulapona"
+},
+{
+"code": 26,
+"name": "Kuliyapitiya"
+},
+{
+"code": 20,
+"name": "Kurunegala"
+},
+{
+"code": 85,
+"name": "Mahabage"
+},
+{
+"code": 81,
+"name": "Maharagama"
+},
+{
+"code": 37,
+"name": "Maho"
+},
+{
+"code": 84,
+"name": "Malabe"
+},
+{
+"code": 13,
+"name": "Manaragala"
+},
+{
+"code": 90,
+"name": "Mannar"
+},
+{
+"code": 46,
+"name": "Mapalagama"
+},
+{
+"code": 9,
+"name": "Matale"
+},
+{
+"code": 31,
+"name": "Matara"
+},
+{
+"code": 47,
+"name": "Mathugama"
+},
+{
+"code": 68,
+"name": "Mawanella"
+},
+{
+"code": 40,
+"name": "Medawachchiya"
+},
+{
+"code": 75,
+"name": "Moratuwa"
+},
+{
+"code": 41,
+"name": "Muthur"
+},
+{
+"code": 43,
+"name": "Nanatan"
+},
+{
+"code": 79,
+"name": "Narammala"
+},
+{
+"code": 27,
+"name": "Negombo"
+},
+{
+"code": 65,
+"name": "Nochchiyagama"
+},
+{
+"code": 87,
+"name": "Nuwara Eliya"
+},
+{
+"code": 70,
+"name": "Padavi Parakramapura"
+},
+{
+"code": 55,
+"name": "Pilimathalawa"
+},
+{
+"code": 28,
+"name": "Polonnaruwa"
+},
+{
+"code": 45,
+"name": "Pottuvil"
+},
+{
+"code": 34,
+"name": "Rambukkana"
+},
+{
+"code": 15,
+"name": "Rathnapura"
+},
+{
+"code": 19,
+"name": "Rikillagaskada"
+},
+{
+"code": 14,
+"name": "Ruwanwella"
+},
+{
+"code": 18,
+"name": "Sahasapura"
+},
+{
+"code": 60,
+"name": "Samanthurei"
+},
+{
+"code": 999,
+"name": "Sanasa Development Bank Head Office"
+},
+{
+"code": 61,
+"name": "Siyabalanduwa"
+},
+{
+"code": 83,
+"name": "Thalawa"
+},
+{
+"code": 36,
+"name": "Thambuththegama"
+},
+{
+"code": 21,
+"name": "Trincomalle"
+},
+{
+"code": 72,
+"name": "Uhana"
+},
+{
+"code": 63,
+"name": "Valachchena"
+},
+{
+"code": 12,
+"name": "Vavuniya"
+},
+{
+"code": 16,
+"name": "Warakapola"
+},
+{
+"code": 54,
+"name": "Wariyapola"
+},
+{
+"code": 38,
+"name": "Wennappuwa"
+},
+{
+"code": 66,
+"name": "Yakkalamulla"
+}
+]
+},
+{
+"id": 15,
+"name": "Seylan Bank PLC",
+"bankCode": 7287,
+"type": "commercial",
+"swift": "SEYLKLCO",
+"phone": "+94 11 2456000",
+"address": "Galle Road, Colombo 03",
+"email": "info@seylan.lk",
+"website": "https://www.seylan.lk",
+"branches": [
+{
+"code": 116,
+"name": "Akkaraipatthu"
+},
+{
+"code": 100,
+"name": "Akuressa"
+},
+{
+"code": 24,
+"name": "Ambalangoda"
+},
+{
+"code": 105,
+"name": "Ambalantota"
+},
+{
+"code": 91,
+"name": "Ampara"
+},
+{
+"code": 21,
+"name": "Anuradhapura"
+},
+{
+"code": 129,
+"name": "Aralaganwila"
+},
+{
+"code": 163,
+"name": "Athurugiriya"
+},
+{
+"code": 41,
+"name": "Attidiya"
+},
+{
+"code": 75,
+"name": "Awissawella"
+},
+{
+"code": 26,
+"name": "Badulla"
+},
+{
+"code": 145,
+"name": "Baduraliya"
+},
+{
+"code": 20,
+"name": "Balangoda"
+},
+{
+"code": 139,
+"name": "Bambalapitiya"
+},
+{
+"code": 54,
+"name": "Bandaragama"
+},
+{
+"code": 46,
+"name": "Bandarawela"
+},
+{
+"code": 101,
+"name": "Battaramulla"
+},
+{
+"code": 73,
+"name": "Batticaloa"
+},
+{
+"code": 65,
+"name": "Beliatta"
+},
+{
+"code": 121,
+"name": "Beruwala"
+},
+{
+"code": 59,
+"name": "Bogawanthalawa"
+},
+{
+"code": 34,
+"name": "Boralesgamuwa"
+},
+{
+"code": 82,
+"name": "Borella"
+},
+{
+"code": 137,
+"name": "Bowatta"
+},
+{
+"code": 996,
+"name": "Central Processing Unit"
+},
+{
+"code": 117,
+"name": "Chankanai"
+},
+{
+"code": 95,
+"name": "Chavakachcheri"
+},
+{
+"code": 98,
+"name": "Chenkalady"
+},
+{
+"code": 15,
+"name": "Chilaw"
+},
+{
+"code": 166,
+"name": "Chunnakam"
+},
+{
+"code": 32,
+"name": "Cinnamon Gardens"
+},
+{
+"code": 1,
+"name": "City Office"
+},
+{
+"code": 30,
+"name": "Colombo Fort"
+},
+{
+"code": 144,
+"name": "Colombo Gold Centre"
+},
+{
+"code": 69,
+"name": "Dam Street"
+},
+{
+"code": 103,
+"name": "Dambulla"
+},
+{
+"code": 161,
+"name": "Dankotuwa"
+},
+{
+"code": 156,
+"name": "Deal Place"
+},
+{
+"code": 29,
+"name": "Dehiattakandiya"
+},
+{
+"code": 14,
+"name": "Dehiwala"
+},
+{
+"code": 111,
+"name": "Dummalasooriya"
+},
+{
+"code": 45,
+"name": "Embilipitiya"
+},
+{
+"code": 138,
+"name": "Eppawala"
+},
+{
+"code": 113,
+"name": "Galenbidunuwewa"
+},
+{
+"code": 16,
+"name": "Galle"
+},
+{
+"code": 11,
+"name": "Gampaha"
+},
+{
+"code": 25,
+"name": "Gampola"
+},
+{
+"code": 60,
+"name": "Ganemulla"
+},
+{
+"code": 112,
+"name": "Godagama"
+},
+{
+"code": 123,
+"name": "Gothatuwa"
+},
+{
+"code": 22,
+"name": "Grandpass"
+},
+{
+"code": 81,
+"name": "Hambantota"
+},
+{
+"code": 155,
+"name": "Hasalaka"
+},
+{
+"code": 39,
+"name": "Hatton"
+},
+{
+"code": 83,
+"name": "Havelock Town"
+},
+{
+"code": 999,
+"name": "Head Office"
+},
+{
+"code": 140,
+"name": "Hikkaduwa"
+},
+{
+"code": 51,
+"name": "Hingurakgoda"
+},
+{
+"code": 43,
+"name": "Homagama"
+},
+{
+"code": 23,
+"name": "Horana"
+},
+{
+"code": 120,
+"name": "Ingiriya"
+},
+{
+"code": 27,
+"name": "Ja-Ela"
+},
+{
+"code": 85,
+"name": "Jaffna"
+},
+{
+"code": 28,
+"name": "Kadawatha"
+},
+{
+"code": 102,
+"name": "Kaduruwela"
+},
+{
+"code": 130,
+"name": "Kalawanchikudy"
+},
+{
+"code": 97,
+"name": "Kalmunai"
+},
+{
+"code": 147,
+"name": "Kalpitiya"
+},
+{
+"code": 42,
+"name": "Kalubowila"
+},
+{
+"code": 36,
+"name": "Kalutara"
+},
+{
+"code": 146,
+"name": "Kamburupitiya"
+},
+{
+"code": 17,
+"name": "Kandy"
+},
+{
+"code": 115,
+"name": "Kanthale"
+},
+{
+"code": 164,
+"name": "Karapitiya"
+},
+{
+"code": 148,
+"name": "Kataragama"
+},
+{
+"code": 74,
+"name": "Kaththankudy"
+},
+{
+"code": 149,
+"name": "Katugastota"
+},
+{
+"code": 31,
+"name": "Katunayaka"
+},
+{
+"code": 55,
+"name": "Katuneriya"
+},
+{
+"code": 10,
+"name": "Kegalle"
+},
+{
+"code": 77,
+"name": "Kekirawa"
+},
+{
+"code": 143,
+"name": "Kelaniya"
+},
+{
+"code": 93,
+"name": "Kilinochchi"
+},
+{
+"code": 6,
+"name": "Kiribathgoda"
+},
+{
+"code": 126,
+"name": "Kirindiwela"
+},
+{
+"code": 122,
+"name": "Kirulapone"
+},
+{
+"code": 58,
+"name": "Kochchikade"
+},
+{
+"code": 56,
+"name": "Koggala"
+},
+{
+"code": 8,
+"name": "Kollupitiya"
+},
+{
+"code": 61,
+"name": "Kotagala Talawakale"
+},
+{
+"code": 118,
+"name": "Kotahena"
+},
+{
+"code": 136,
+"name": "Kotiyakumbura"
+},
+{
+"code": 33,
+"name": "Kottawa"
+},
+{
+"code": 44,
+"name": "Kuliyapitiya"
+},
+{
+"code": 18,
+"name": "Kurunegala"
+},
+{
+"code": 4,
+"name": "Maharagama"
+},
+{
+"code": 107,
+"name": "Mahiyanganaya"
+},
+{
+"code": 67,
+"name": "Malabe"
+},
+{
+"code": 53,
+"name": "Manampitiya"
+},
+{
+"code": 131,
+"name": "Manipay"
+},
+{
+"code": 94,
+"name": "Mannar"
+},
+{
+"code": 47,
+"name": "Maradana"
+},
+{
+"code": 84,
+"name": "Marandagahamula"
+},
+{
+"code": 38,
+"name": "Matale"
+},
+{
+"code": 2,
+"name": "Matara"
+},
+{
+"code": 165,
+"name": "Matara Bazzar"
+},
+{
+"code": 66,
+"name": "Mathugama"
+},
+{
+"code": 48,
+"name": "Mawanella"
+},
+{
+"code": 109,
+"name": "Mawathagama"
+},
+{
+"code": 132,
+"name": "Medawachchiya"
+},
+{
+"code": 89,
+"name": "Meegoda"
+},
+{
+"code": 86,
+"name": "Millenium"
+},
+{
+"code": 124,
+"name": "Minuwangoda"
+},
+{
+"code": 78,
+"name": "Mirigama"
+},
+{
+"code": 104,
+"name": "Monaragala"
+},
+{
+"code": 125,
+"name": "Moratumulla"
+},
+{
+"code": 9,
+"name": "Moratuwa"
+},
+{
+"code": 3,
+"name": "Mount Lavinia"
+},
+{
+"code": 96,
+"name": "Mullativu"
+},
+{
+"code": 167,
+"name": "Mutwal"
+},
+{
+"code": 106,
+"name": "Narammala"
+},
+{
+"code": 52,
+"name": "Nawala"
+},
+{
+"code": 76,
+"name": "Nawalapitiya"
+},
+{
+"code": 13,
+"name": "Negombo"
+},
+{
+"code": 92,
+"name": "Nelliady"
+},
+{
+"code": 87,
+"name": "Nittambuwa"
+},
+{
+"code": 133,
+"name": "Nochchiyagama"
+},
+{
+"code": 12,
+"name": "Nugegoda"
+},
+{
+"code": 19,
+"name": "Nuwara Eliya"
+},
+{
+"code": 50,
+"name": "Old Moor Street"
+},
+{
+"code": 154,
+"name": "Padaviya"
+},
+{
+"code": 134,
+"name": "Pallekelle"
+},
+{
+"code": 5,
+"name": "Panadura"
+},
+{
+"code": 162,
+"name": "Pannala"
+},
+{
+"code": 90,
+"name": "Pelmadulla."
+},
+{
+"code": 157,
+"name": "Peradeniya"
+},
+{
+"code": 64,
+"name": "Pettah"
+},
+{
+"code": 158,
+"name": "Pilimathalawa"
+},
+{
+"code": 99,
+"name": "Piliyandala"
+},
+{
+"code": 114,
+"name": "Pitakotte"
+},
+{
+"code": 159,
+"name": "Polonnaruwa"
+},
+{
+"code": 151,
+"name": "Pothuvil"
+},
+{
+"code": 110,
+"name": "Pussellawa"
+},
+{
+"code": 49,
+"name": "Puttalam"
+},
+{
+"code": 62,
+"name": "Raddolugama"
+},
+{
+"code": 128,
+"name": "Ranpokunugama"
+},
+{
+"code": 7,
+"name": "Ratnapura"
+},
+{
+"code": 998,
+"name": "Retail Remittance Center"
+},
+{
+"code": 141,
+"name": "Rideegama"
+},
+{
+"code": 80,
+"name": "Ruwanwella"
+},
+{
+"code": 152,
+"name": "Samanthurai"
+},
+{
+"code": 40,
+"name": "Sarikkamulla"
+},
+{
+"code": 0,
+"name": "Seylan Bank Head Office"
+},
+{
+"code": 997,
+"name": "Seylan Card Centre (SCC)"
+},
+{
+"code": 153,
+"name": "Siyambalanduwa"
+},
+{
+"code": 79,
+"name": "Soysapura"
+},
+{
+"code": 37,
+"name": "Tissamaharama"
+},
+{
+"code": 88,
+"name": "Trincomalee"
+},
+{
+"code": 119,
+"name": "Udappu"
+},
+{
+"code": 72,
+"name": "Vavuniya"
+},
+{
+"code": 108,
+"name": "Veyangoda"
+},
+{
+"code": 142,
+"name": "Wadduwa"
+},
+{
+"code": 70,
+"name": "Warakapola"
+},
+{
+"code": 71,
+"name": "Wattala"
+},
+{
+"code": 57,
+"name": "Welimada"
+},
+{
+"code": 63,
+"name": "Weliveriya"
+},
+{
+"code": 68,
+"name": "Wellawatte"
+},
+{
+"code": 160,
+"name": "Wennappuwa"
+},
+{
+"code": 135,
+"name": "Wijerama"
+},
+{
+"code": 35,
+"name": "Yakkala"
+},
+{
+"code": 127,
+"name": "Yatiyantota"
+}
+]
+},
+{
+"id": 16,
+"name": "Standard Chartered Bank",
+"bankCode": 7038,
+"type": "commercial",
+"swift": "SCBLKLCO",
+"phone": "+94 11 2480000",
+"address": "York Street, Colombo 01",
+"email": "",
+"website": "https://www.sc.com/lk",
+"branches": [
+{
+"code": 2,
+"name": "Colpetty"
+},
+{
+"code": 1,
+"name": "Head Office"
+},
+{
+"code": 999,
+"name": "Head Office"
+},
+{
+"code": 4,
+"name": "Kiribathgoda"
+},
+{
+"code": 5,
+"name": "Kirullapone"
+},
+{
+"code": 6,
+"name": "Moratuwa"
+},
+{
+"code": 10,
+"name": "Pettah"
+},
+{
+"code": 11,
+"name": "Priority Banking Centre"
+},
+{
+"code": 7,
+"name": "Rajagiriya"
+},
+{
+"code": 3,
+"name": "Wellawatte"
+}
+]
+},
+{
+"id": 17,
+"name": "Union Bank of Colombo PLC",
+"bankCode": 7302,
+"type": "commercial",
+"swift": "UBCHKLCO",
+"phone": "+94 11 2374100",
+"address": "Galle Road, Colombo 03",
+"email": "info@unionb.com",
+"website": "https://www.unionb.com",
+"branches": [
+{
+"code": 63,
+"name": "Akuressa"
+},
+{
+"code": 35,
+"name": "Ambalangoda"
+},
+{
+"code": 49,
+"name": "Ambalanthota"
+},
+{
+"code": 41,
+"name": "Angunakolapelessa"
+},
+{
+"code": 31,
+"name": "Anuradhapura"
+},
+{
+"code": 22,
+"name": "Atchuvely"
+},
+{
+"code": 65,
+"name": "Attidiya"
+},
+{
+"code": 33,
+"name": "Badulla"
+},
+{
+"code": 51,
+"name": "Balangoda"
+},
+{
+"code": 25,
+"name": "Batticaloa"
+},
+{
+"code": 36,
+"name": "Chilaw"
+},
+{
+"code": 21,
+"name": "Chunnakkam"
+},
+{
+"code": 2,
+"name": "Colpetty"
+},
+{
+"code": 32,
+"name": "Dhambulla"
+},
+{
+"code": 60,
+"name": "Elpitiya"
+},
+{
+"code": 44,
+"name": "Embilipitiya"
+},
+{
+"code": 27,
+"name": "Galle"
+},
+{
+"code": 24,
+"name": "Gampaha"
+},
+{
+"code": 43,
+"name": "Gampola"
+},
+{
+"code": 59,
+"name": "Ganemulla"
+},
+{
+"code": 8,
+"name": "Head Office Branch"
+},
+{
+"code": 34,
+"name": "Horana"
+},
+{
+"code": 48,
+"name": "Horowpathana"
+},
+{
+"code": 55,
+"name": "Ibbagamuwa"
+},
+{
+"code": 14,
+"name": "Ja ela"
+},
+{
+"code": 18,
+"name": "Jaffna"
+},
+{
+"code": 29,
+"name": "Kadawatha"
+},
+{
+"code": 3,
+"name": "Kandy"
+},
+{
+"code": 42,
+"name": "Kebithigollewa"
+},
+{
+"code": 45,
+"name": "Kegalle"
+},
+{
+"code": 47,
+"name": "Kekirawa"
+},
+{
+"code": 66,
+"name": "Kohuwala"
+},
+{
+"code": 12,
+"name": "Kotahena"
+},
+{
+"code": 56,
+"name": "Kuliyapitiya"
+},
+{
+"code": 9,
+"name": "Kurunegala"
+},
+{
+"code": 52,
+"name": "Maharagama"
+},
+{
+"code": 19,
+"name": "Mannar"
+},
+{
+"code": 37,
+"name": "Marawila"
+},
+{
+"code": 11,
+"name": "Matara"
+},
+{
+"code": 53,
+"name": "Mathugama"
+},
+{
+"code": 61,
+"name": "Medawachchiya"
+},
+{
+"code": 50,
+"name": "Minuwangoda"
+},
+{
+"code": 58,
+"name": "Moneragala"
+},
+{
+"code": 16,
+"name": "Moratuwa"
+},
+{
+"code": 39,
+"name": "Narammala"
+},
+{
+"code": 4,
+"name": "Nawala"
+},
+{
+"code": 54,
+"name": "Nawalapitiya"
+},
+{
+"code": 10,
+"name": "Negambo"
+},
+{
+"code": 15,
+"name": "Neugegoda"
+},
+{
+"code": 67,
+"name": "New Borella"
+},
+{
+"code": 7,
+"name": "Old Moor Street"
+},
+{
+"code": 38,
+"name": "Panadura"
+},
+{
+"code": 40,
+"name": "Pelawatte"
+},
+{
+"code": 6,
+"name": "Pettah"
+},
+{
+"code": 57,
+"name": "Pilimathalawa"
+},
+{
+"code": 28,
+"name": "Piliyandala"
+},
+{
+"code": 64,
+"name": "Rajagiriaya"
+},
+{
+"code": 62,
+"name": "Ratmalana"
+},
+{
+"code": 30,
+"name": "Ratnapura"
+},
+{
+"code": 26,
+"name": "Trincomalee"
+},
+{
+"code": 997,
+"name": "UB Corporate"
+},
+{
+"code": 1,
+"name": "UB Main Office"
+},
+{
+"code": 20,
+"name": "Vavuniya"
+},
+{
+"code": 46,
+"name": "Warakapola"
+},
+{
+"code": 23,
+"name": "Wattala"
+},
+{
+"code": 5,
+"name": "Wellawatte"
+},
+{
+"code": 17,
+"name": "Wennappuwa"
+}
+]
+},
+{
+"id": 18,
+"name": "Hatton National Bank PLC (HNB)",
+"bankCode": 7083,
+"type": "commercial",
+"swift": "HATBKLCO",
+"phone": "+94 11 2664664",
+"address": "HNB Towers, Colombo 10",
+"email": "hnbconnect@hnb.net",
+"website": "https://www.hnb.net",
+"branches": []
+},
+{
+"id": 19,
+"name": "HSBC Sri Lanka",
+"bankCode": 7264,
+"type": "commercial",
+"swift": "HSBCKLCO",
+"phone": "+94 11 4472200",
+"address": "Sir Baron Jayatilaka Mawatha, Colombo 01",
+"email": "ceosrilanka@hsbc.com.lk",
+"website": "https://www.hsbc.lk",
+"branches": []
+},
+{
+"id": 20,
+"name": "State Bank of India (Sri Lanka)",
+"bankCode": 7268,
+"type": "commercial",
+"swift": "SBINKLCO",
+"phone": "+94 11 4446812",
+"address": "Colombo 01",
+"email": "",
+"website": "https://www.sbi.co.in/web/srilanka",
+"branches": []
+},
+{
+"id": 21,
+"name": "Public Bank Berhad (Sri Lanka)",
+"bankCode": 7274,
+"type": "commercial",
+"swift": "PBBKLKLCO",
+"phone": "+94 11 2576289",
+"address": "Colombo 03",
+"email": "",
+"website": "https://www.publicbank.lk",
+"branches": []
+},
+{
+"id": 22,
+"name": "MCB Bank Ltd",
+"bankCode": 7273,
+"type": "commercial",
+"swift": "MCBLKLCO",
+"phone": "+94 11 5222200",
+"address": "Colombo 01",
+"email": "",
+"website": "https://www.mcb.com.pk",
+"branches": []
+},
+{
+"id": 23,
+"name": "Indian Bank",
+"bankCode": 7267,
+"type": "commercial",
+"swift": "IDIYKLCO",
+"phone": "+94 11 2447163",
+"address": "Colombo 03",
+"email": "",
+"website": "https://www.indianbank.in",
+"branches": []
+},
+{
+"id": 24,
+"name": "Indian Overseas Bank",
+"bankCode": 7270,
+"type": "commercial",
+"swift": "IOBAKLCO",
+"phone": "+94 11 5324400",
+"address": "Colombo 11",
+"email": "",
+"website": "https://www.iob.in",
+"branches": []
+},
+{
+"id": 25,
+"name": "Habib Bank Ltd",
+"bankCode": 7261,
+"type": "commercial",
+"swift": "HABBKLCO",
+"phone": "+94 11 2370390",
+"address": "Colombo 03",
+"email": "",
+"website": "https://www.hbl.com",
+"branches": []
+},
+{
+"id": 26,
+"name": "Deutsche Bank AG",
+"bankCode": 7246,
+"type": "commercial",
+"swift": "DEUTKLCO",
+"phone": "+94 11 2447062",
+"address": "Colombo 02",
+"email": "",
+"website": "https://www.db.com",
+"branches": []
+},
+{
+"id": 27,
+"name": "Bank of China Ltd (Sri Lanka)",
+"bankCode": 7230,
+"type": "commercial",
+"swift": "BKCHKLCO",
+"phone": "+94 11 2195566",
+"address": "Colombo",
+"email": "",
+"website": "https://www.bankofchina.com",
+"branches": []
+},
+{
+"id": 28,
+"name": "Citibank N.A. Sri Lanka",
+"bankCode": 7244,
+"type": "commercial",
+"swift": "CITIKLCO",
+"phone": "+94 11 2447316",
+"address": "Colombo 07",
+"email": "",
+"website": "https://www.citibank.com",
+"branches": []
+},
+{
+"id": 29,
+"name": "Housing Development Finance Corporation Bank (HDFC)",
+"bankCode": 7422,
+"type": "specialized",
+"swift": "HDFCKLCO",
+"phone": "+94 11 2446241",
+"address": "Colombo",
+"email": "",
+"website": "https://www.hdfc.lk",
+"branches": []
+}
+];
+
+// ── STATE ──
+const state = { selectedBankId: null, typeFilter: '', globalSearch: '', branchSearch: '', page: 1, perPage: 20 };
+
+// ── CLOCK ──
+function updateClock(){
+  const now = new Date();
+  const t = now.toLocaleTimeString('en-LK',{hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false});
+  const d = now.toLocaleDateString('en-LK',{weekday:'short',year:'numeric',month:'short',day:'numeric'});
+  document.getElementById('clockTime').textContent = t;
+  document.getElementById('clockDate').textContent = d;
+}
+updateClock(); setInterval(updateClock,1000);
+
+// ── STATS ──
+const totalBranches = BANKS.reduce((s,b)=>s+b.branches.length,0);
+document.getElementById('stat-banks').textContent = BANKS.length;
+document.getElementById('stat-branches').textContent = totalBranches.toLocaleString();
+
+// ── FILTERED BANKS ──
+function filteredBanks(){
+  let banks = BANKS;
+  if(state.typeFilter) banks = banks.filter(b=>b.type===state.typeFilter);
+  if(state.globalSearch){
+    const q=state.globalSearch.toLowerCase();
+    banks = banks.filter(b=>
+      b.name.toLowerCase().includes(q)||
+      b.swift.toLowerCase().includes(q)||
+      String(b.bankCode).includes(q)||
+      b.branches.some(br=>br.name.toLowerCase().includes(q)||String(br.code).includes(q))
+    );
+  }
+  return banks;
+}
+
+// ── RENDER BANK LIST ──
+function renderBankList(){
+  const list=document.getElementById('bankList');
+  const banks=filteredBanks();
+  list.innerHTML='';
+  if(!banks.length){
+    list.innerHTML='<div class="empty-state" style="padding:28px 16px"><div style="font-size:30px;opacity:.25">🔍</div><p style="margin-top:8px;font-size:12px;color:var(--text-muted)">No banks found</p></div>';
+    return;
+  }
+  banks.forEach(bank=>{
+    const div=document.createElement('div');
+    div.className='bank-item'+(state.selectedBankId===bank.id?' active':'');
+    div.onclick=()=>selectBank(bank.id);
+    div.innerHTML=`<span class="bank-item-name">${bank.name}</span><span class="bank-badge badge-${bank.type}">${bank.type==='commercial'?'COM':bank.type==='government'?'GOV':'SPC'}</span>`;
+    list.appendChild(div);
+  });
+  document.getElementById('results-info').innerHTML=`Showing <strong>${banks.length}</strong> bank${banks.length!==1?'s':''}`;
+}
+
+// ── DROPDOWN ──
+function renderDropdown(){
+  const sel=document.getElementById('bankSelectDropdown');
+  sel.innerHTML='<option value="">— Jump to a Bank —</option>';
+  BANKS.forEach(b=>{
+    const opt=document.createElement('option');
+    opt.value=b.id; opt.textContent=b.name;
+    sel.appendChild(opt);
+  });
+}
+
+// ── SELECT BANK ──
+function selectBank(id){
+  state.selectedBankId=id;
+  state.branchSearch='';
+  state.page=1;
+  renderBankList();
+  renderBranchPanel();
+  document.getElementById('bankSelectDropdown').value=id;
+}
+
+// ── RENDER BRANCH PANEL ──
+function renderBranchPanel(){
+  const panel=document.getElementById('branchPanel');
+  if(state.globalSearch&&!state.selectedBankId){renderGlobalSearch(panel);return;}
+  if(!state.selectedBankId){
+    panel.innerHTML='<div class="welcome-panel"><div class="w-icon">🏛️</div><h3>Select a Bank to View Branches</h3><p>Click any bank from the left panel, or use the search to find branches across all banks.</p></div>';
+    return;
+  }
+  const bank=BANKS.find(b=>b.id===state.selectedBankId);
+  if(!bank)return;
+
+  const q=state.branchSearch.toLowerCase();
+  let branches=bank.branches;
+  if(q) branches=branches.filter(br=>br.name.toLowerCase().includes(q)||String(br.code).includes(q));
+
+  const total=branches.length;
+  const totalPages=Math.ceil(total/state.perPage)||1;
+  const start=(state.page-1)*state.perPage;
+  const paginated=branches.slice(start,start+state.perPage);
+
+  const typeBadge=`<span class="bank-badge badge-${bank.type}" style="font-size:11px;padding:4px 11px">${bank.type.charAt(0).toUpperCase()+bank.type.slice(1)}</span>`;
+
+  let contactStrip='';
+  const parts=[];
+  if(bank.phone) parts.push(`<div class="contact-item"><svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.55 13 19.79 19.79 0 0 1 1.48 4.36 2 2 0 0 1 3.46 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L7.91 9.4a16 16 0 0 0 6.69 6.69l1.8-1.8a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 23 16.92z"/></svg><a href="tel:${bank.phone}">${bank.phone}</a></div>`);
+  if(bank.address) parts.push(`<div class="contact-item"><svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg><span>${bank.address}</span></div>`);
+  if(bank.email) parts.push(`<div class="contact-item"><svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg><a href="mailto:${bank.email}">${bank.email}</a></div>`);
+  if(parts.length) contactStrip=`<div class="bank-contact-strip">${parts.join('')}</div>`;
+
+  panel.innerHTML=`
+    <div class="bank-header-card">
+      <div>
+        <h3>${bank.name}</h3>
+        <div class="bank-meta">
+          ${typeBadge}
+          <span class="bank-meta-item">Bank Code: <strong>${bank.bankCode}</strong></span>
+          <span class="bank-meta-item">SWIFT: <strong>${bank.swift}</strong></span>
+        </div>
+      </div>
+      <div class="bank-header-right">
+        <div class="branch-count-badge">${bank.branches.length}<small>Branches</small></div>
+        ${bank.website?`<a href="${bank.website}" target="_blank" rel="noopener" class="website-btn">
+          <svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+          Visit Website</a>`:''}
+      </div>
+    </div>
+    ${contactStrip}
+    ${bank.branches.length===0?`<div class="no-branch-note">Branch data for this bank is not available in our current dataset. Please visit the bank's website for branch information.</div>`:`
+    <div class="table-wrap">
+      <div class="branch-table-header">
+        <div class="branch-search-wrap">
+          <svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+          <input type="text" class="branch-search" id="branchSearch" placeholder="Filter branches…" value="${state.branchSearch}" oninput="handleBranchSearch(this.value)">
+        </div>
+        <span style="font-size:12px;color:var(--text-muted)">${total} result${total!==1?'s':''}</span>
+      </div>
+      ${paginated.length?`
+      <table>
+        <thead><tr><th>#</th><th>Branch Name</th><th>Branch Code</th><th>Bank Code</th><th></th></tr></thead>
+        <tbody>
+          ${paginated.map((br,i)=>`
+            <tr>
+              <td class="td-num">${start+i+1}</td>
+              <td class="td-branch">${hl(br.name,q)}</td>
+              <td class="td-code">${hl(String(br.code),q)}</td>
+              <td class="td-bankcode">${bank.bankCode}</td>
+              <td><button class="copy-btn" onclick="copyCode('${br.code}','${br.name.replace(/'/g,"\'")}','${bank.bankCode}')" title="Copy branch code">⧉</button></td>
+            </tr>
+          `).join('')}
+        </tbody>
+      </table>`:
+      `<div class="empty-state"><div class="empty-icon">🔍</div><h4>No branches found</h4><p>Try a different search term.</p></div>`}
+      ${totalPages>1?renderPagination(state.page,totalPages,total,start,paginated.length):''}
+    </div>`}
+  `;
+}
+
+function renderGlobalSearch(panel){
+  const q=state.globalSearch.toLowerCase();
+  const results=[];
+  BANKS.forEach(bank=>{
+    bank.branches.forEach(br=>{
+      if(br.name.toLowerCase().includes(q)||String(br.code).includes(q)||bank.name.toLowerCase().includes(q)||String(bank.bankCode).includes(q)){
+        results.push({bank,branch:br});
+      }
+    });
+  });
+  const total=results.length;
+  const totalPages=Math.ceil(total/state.perPage)||1;
+  const start=(state.page-1)*state.perPage;
+  const paginated=results.slice(start,start+state.perPage);
+
+  panel.innerHTML=`
+    <div class="bank-header-card">
+      <div><h3>Search Results</h3>
+      <div class="bank-meta"><span class="bank-meta-item">Query: <strong>"${state.globalSearch}"</strong></span><span class="bank-meta-item">Found: <strong>${total}</strong> branch${total!==1?'es':''}</span></div></div>
+      <div class="branch-count-badge">${total}<small>Results</small></div>
+    </div>
+    <div class="table-wrap">
+      ${paginated.length?`
+      <table>
+        <thead><tr><th>#</th><th>Bank</th><th>Branch Name</th><th>Branch Code</th><th>Bank Code</th><th></th></tr></thead>
+        <tbody>
+          ${paginated.map((r,i)=>`
+            <tr onclick="selectBank(${r.bank.id})" style="cursor:pointer">
+              <td class="td-num">${start+i+1}</td>
+              <td style="font-size:12px;color:var(--primary);font-weight:500;max-width:150px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${r.bank.name}</td>
+              <td class="td-branch">${hl(r.branch.name,q)}</td>
+              <td class="td-code">${hl(String(r.branch.code),q)}</td>
+              <td class="td-bankcode">${r.bank.bankCode}</td>
+              <td><button class="copy-btn" onclick="event.stopPropagation();copyCode('${r.branch.code}','${r.branch.name.replace(/'/g,"\'")}','${r.bank.bankCode}')" title="Copy">⧉</button></td>
+            </tr>
+          `).join('')}
+        </tbody>
+      </table>`:
+      `<div class="empty-state"><div class="empty-icon">🔍</div><h4>No results found</h4><p>Try a different keyword or branch name.</p></div>`}
+      ${totalPages>1?renderPagination(state.page,totalPages,total,start,paginated.length):''}
+    </div>
+  `;
+}
+
+function renderPagination(cur,total,count,start,shown){
+  let pages='';
+  for(let i=1;i<=total;i++){
+    if(i===1||i===total||Math.abs(i-cur)<=2) pages+=`<button class="page-btn${i===cur?' active':''}" onclick="goPage(${i})">${i}</button>`;
+    else if(Math.abs(i-cur)===3) pages+=`<span style="color:var(--text-light);padding:0 3px;line-height:28px">…</span>`;
+  }
+  return `<div class="pagination">
+    <span>Showing ${start+1}–${start+shown} of ${count}</span>
+    <div class="page-btns">
+      <button class="page-btn" onclick="goPage(${cur-1})" ${cur===1?'disabled':''}>← Prev</button>
+      ${pages}
+      <button class="page-btn" onclick="goPage(${cur+1})" ${cur===total?'disabled':''}>Next →</button>
+    </div>
+  </div>`;
+}
+
+function hl(text,q){
+  if(!q) return text;
+  const re=new RegExp('('+q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+')','gi');
+  return String(text).replace(re,'<span class="highlight">$1</span>');
+}
+
+// ── EVENTS ──
+function handleGlobalSearch(){
+  state.globalSearch=document.getElementById('globalSearch').value;
+  state.page=1;
+  state.selectedBankId=null;
+  document.getElementById('bankSelectDropdown').value='';
+  renderBankList();
+  if(state.globalSearch) renderGlobalSearch(document.getElementById('branchPanel'));
+  else document.getElementById('branchPanel').innerHTML='<div class="welcome-panel"><div class="w-icon">🏛️</div><h3>Select a Bank to View Branches</h3><p>Click any bank from the left panel, or use the search to find branches across all banks.</p></div>';
+}
+
+function handleTypeFilter(){
+  setTypeFilter(document.getElementById('bankTypeFilter').value);
+}
+
+function handleDropdownSelect(){
+  const v=document.getElementById('bankSelectDropdown').value;
+  if(v) selectBank(parseInt(v));
+}
+
+function handleBranchSearch(val){
+  state.branchSearch=val;
+  state.page=1;
+  renderBranchPanel();
+  const inp=document.getElementById('branchSearch');
+  if(inp){inp.focus();inp.setSelectionRange(inp.value.length,inp.value.length);}
+}
+
+function setTypeFilter(type){
+  state.typeFilter=type;
+  state.page=1;
+  document.getElementById('bankTypeFilter').value=type;
+  const tags={all:'tag-all',commercial:'tag-commercial',government:'tag-government',specialized:'tag-specialized'};
+  Object.entries(tags).forEach(([key,id])=>{
+    const el=document.getElementById(id);
+    if(!el)return;
+    if(key==='all'){
+      el.className='filter-tag '+(type?'all-inactive':'all');
+    } else {
+      el.className='filter-tag '+key+(type===key?' active':'');
+    }
+  });
+  renderBankList();
+}
+
+function goPage(p){
+  state.page=p;
+  renderBranchPanel();
+  document.querySelector('.branch-panel').scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+function copyCode(code,name,bankCode){
+  const text=`Branch Code: ${code} | Bank Code: ${bankCode} | ${name}`;
+  navigator.clipboard.writeText(text).then(()=>{
+    const t=document.getElementById('toast');
+    t.textContent=`✓ Copied: ${code} (${name})`;
+    t.classList.add('show');
+    setTimeout(()=>t.classList.remove('show'),2500);
+  });
+}
+
+// ── INIT ──
+renderDropdown();
+renderBankList();
+</script>
+</body>
+</html>
